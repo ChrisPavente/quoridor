@@ -1,0 +1,83 @@
+//Test Server
+import java.io.*;
+import java.util.*;
+import java.net.*;
+
+
+class testServ extends Thread {
+    
+
+    //number of clients
+    public static int nclient = 0;
+    //Server port
+    public static final int defaultPort = 4099;
+    //server will use this socket
+    public Socket s = null;
+    
+
+    public testServ(Socket s) {
+	this.s = s;
+    }
+
+
+    //port number as input
+    //opens the server and multi threads the server
+        public static void startServ(int serverPort) throws Exception {
+	ServerSocket svr = new ServerSocket(serverPort);
+	while(true) {
+	    System.out.println("Starting new server");
+	    Socket s = svr.accept();
+	    new testServ(s).start();
+	}
+
+    }
+
+
+    //imput: client socket
+    //runnin stuff
+
+    public void run() {
+	nclient++;
+	System.out.println("Starting thread #" + nclient);
+	try {
+	    
+	    
+	    	    
+	    Scanner in = new Scanner(s.getInputStream());
+	    PrintStream out = new PrintStream(s.getOutputStream()); 
+	    
+
+	    System.out.println("Server says hi");
+	    int x = in.nextLine();
+	    System.out.println("You said " + x);
+	    out.print("Message sent back");
+	    s.close();
+
+
+	    
+	    
+	}catch (Exception e) {
+	    System.err.println(e);
+	    System.exit(1);
+	}
+
+
+    }
+
+    
+    
+    public static void main (String [] args) {
+
+	try {
+	    startServ(defaultPort);
+	} catch (Exception e) {
+	    System.err.println(e);
+	    System.exit(2);
+	}
+    }
+
+
+
+
+
+}
