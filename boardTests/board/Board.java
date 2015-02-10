@@ -1,5 +1,6 @@
 package board;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,7 +37,7 @@ public class Board {
 		}
 		createGrid();
 		int w = WALLS/4; //the number of walls each player will be getting
-		/*
+		players = new ArrayList<Player>();
 		players.add(new Player(grid[0][4],w));
 		players.add(new Player(grid[8][4],w));
 		
@@ -44,7 +45,7 @@ public class Board {
 			players.add(new Player(grid[4][0],w));
 			players.add(new Player(grid[4][8],w));
 		}
-		*/
+		
 	}
 
 	//Must be private or this can be called at any time wiping out the current board

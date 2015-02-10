@@ -12,7 +12,7 @@ public class BoardTest {
 	
 	@Test
 	public void testBoardConstructor() {
-		//Board board = new Board(2);
+		Board board = new Board(2);
 	}
 
 	@Test
