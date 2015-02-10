@@ -18,7 +18,8 @@ public class BoardPanelTest{
 	@Test
 	public void addPanelToFrame(){
 		JFrame f = new JFrame();
-		f.add(new BoardPanel());
 		f.setVisible(true);
+		f.add(new BoardPanel());
+	
 	}
 }

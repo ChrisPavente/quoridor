@@ -1,5 +1,6 @@
 package gui;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 
 import javax.swing.JPanel;
@@ -11,7 +12,9 @@ public class BoardPanel extends JPanel{
 	
 	//Construct an empty board object with no game information associated with it.
 	public BoardPanel(){
-		this.setBounds(0, 0, width, height);
+		this.setBounds(50, 50, width, height);
+		this.setSize(900,600);
+		this.setMaximumSize(new Dimension(900,600));
 		//No game information known at this point
 	}
 	

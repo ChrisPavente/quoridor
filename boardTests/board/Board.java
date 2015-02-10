@@ -1,4 +1,7 @@
+package board;
 import java.util.Arrays;
+
+import board.*;
 
 public class Board {
    /*
@@ -24,7 +27,8 @@ public class Board {
     
     //Constructor
     //builds the board itself
-	public Board() {
+	//Added param numberOfPlayers as Board needs to know how many player objects to make
+	public Board(int numberOfPlayers) {
 		createGrid();
 	}
 
@@ -59,6 +63,11 @@ public class Board {
 	public String getLocation(Square square) {
             return null;
 	}
-
+	
+	//Assumes that the place the wall is to be placed is already legal
+	//The display server will check the legality
+	public void placeWall(int i,int j){
+		grid[i][j] = new Wall(grid[i][j]);
+	}
 
 }

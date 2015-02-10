@@ -1,5 +1,5 @@
 import static org.junit.Assert.*;
-
+import board.*;
 import org.junit.Test;
 
 public class PositionTest {

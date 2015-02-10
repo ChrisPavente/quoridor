@@ -1,3 +1,6 @@
+package board;
+
+import board.Square;
 
 //Represents a moveable piece on the Board
 public class Position {
