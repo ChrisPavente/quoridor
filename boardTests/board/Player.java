@@ -5,15 +5,28 @@ import board.Square;
 public class Player{
 
 	private Square square;
+	private int walls;
 
 	//Player has a reference to where it in on the board
-	public Player(Square s) {
+	public Player(Square s,int walls) {
 	this.square = s;
+	this.walls=walls;
 	}	
 	
 	public Square getSquare(){
 		return square;
 	}
+	
+	public int getWallNum(){
+		return walls;
+	}
+	
+	public void useWall(){
+		walls--;
+	}
+	
+	
+	
 	
 	/*
 	Any move call assumes that the square is a legal place for a player to go

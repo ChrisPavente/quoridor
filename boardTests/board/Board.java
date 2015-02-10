@@ -69,5 +69,13 @@ public class Board {
 	public void placeWall(int i,int j){
 		grid[i][j] = new Wall(grid[i][j]);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
