@@ -1,7 +1,7 @@
 package board;
-import java.util.Arrays;
 
-import board.*;
+import java.util.List;
+
 
 public class Board {
    /*
@@ -24,15 +24,31 @@ public class Board {
 	//Two-dimensional array that will represent the grid
 	//Maybe make this of type square and make a new square object that will be able to have contents
 	private Square [][] grid;
+	private List<Player> players;
     
     //Constructor
     //builds the board itself
 	//Added param numberOfPlayers as Board needs to know how many player objects to make
+	//now constructs a board object, which has a reference to the list of players
 	public Board(int numberOfPlayers) {
+		if(numberOfPlayers !=2 || numberOfPlayers!=4){
+			//BREAK
+		}
 		createGrid();
+		int w = WALLS/4; //the number of walls each player will be getting
+		/*
+		players.add(new Player(grid[0][4],w));
+		players.add(new Player(grid[8][4],w));
+		
+		if(numberOfPlayers==4){
+			players.add(new Player(grid[4][0],w));
+			players.add(new Player(grid[4][8],w));
+		}
+		*/
 	}
 
-	public void createGrid() {
+	//Must be private or this can be called at any time wiping out the current board
+	private void createGrid() {
 		 grid = new Square[HEIGHT][WIDTH]; 
 		 for (int i = 0; i < grid.length; i++) {
   			  for (int k = 0; k < grid.length; k++) {
@@ -70,12 +86,11 @@ public class Board {
 		grid[i][j] = new Wall(grid[i][j]);
 	}
 	
-	
-	
-	
-	
-	
-	
-	
+	public Square getSquareAt(int i,int j){
+		return grid[i][j];
+	}
+
+
+		
 
 }

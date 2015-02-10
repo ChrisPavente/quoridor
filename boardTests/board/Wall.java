@@ -4,11 +4,30 @@ public class Wall extends Square {
 
 	public Wall(Square s) {
 		super(s.getRow(),s.getColumn());
-		this.adjacentDown = s.adjacentDown;
-		this.adjacentLeft = s.adjacentLeft;
-		this.adjacentRight = s.adjacentRight;
-		this.adjacentUp = s.adjacentUp;
-		// TODO Auto-generated constructor stub
+		reLink(s);
+	}
+	
+	//Relinks Wall into the grid
+	private void reLink(Square s){
+		if(s.adjacentDown !=null){
+			this.adjacentDown = s.adjacentDown;
+			s.adjacentDown.adjacentUp = this;
+		}
+		if(s.adjacentLeft !=null){
+			this.adjacentLeft = s.adjacentLeft;
+			s.adjacentLeft.adjacentRight =this;
+	
+		}
+		if(s.adjacentRight !=null){
+			this.adjacentRight = s.adjacentRight;
+			s.adjacentRight.adjacentLeft = this;
+		   
+		}
+		
+		if(s.adjacentUp !=null){	
+			s.adjacentUp.adjacentDown = this;
+			this.adjacentUp = s.adjacentUp;
+		}
 	}
 
 }
