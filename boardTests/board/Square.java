@@ -11,10 +11,10 @@ public class Square {
     //Soon to be removed
 	private boolean occupied;
 
-	public Square adjacentUp;
-	public Square adjacentDown;
-	public Square adjacentRight;
-	public Square adjacentLeft;
+	protected Square adjacentUp;
+	protected Square adjacentDown;
+	protected Square adjacentRight;
+	protected Square adjacentLeft;
 
 	public Square(int row, int col) {
 		this.occupied = false;
@@ -25,24 +25,47 @@ public class Square {
         this.adjacentRight = null;
         this.adjacentLeft = null;
 	}
-
-	public void setNeighbour(Square square) {
-		//if (square.row < 9 && square.row >= 0 && square.col < 9 && square.col >= 0) {
-		 //  if (this.row < 9 && this.row >= 0 && this.col < 9 && this.col >= 0) {
-               String direction = this.determineWhichDirection(square);
-      	       if (direction.equals("Up")) 
-      	           this.adjacentUp = square;
-      	       else if (direction.equals("Down")) 
-     	 	       this.adjacentDown = square;
-      	       else if (direction.equals("Left")) 
-      	           this.adjacentLeft = square;
-      	       else if (direction.equals("Right")) 
-       		       this.adjacentRight = square;
-       		//}
-   		//}
+	
+	
+	//parameter: int n is the direction (0-4)
+	//Up =0 , Right =1, Down=2, Left=3
+	public Square getNeighbour(int n){
+		if(n<0 && n>3){
+			throw new IllegalArgumentException();
+		}
+		if(n==0){
+			return adjacentUp;
+		}
+		else if(n==1){
+			return adjacentRight;
+		}
+		else if(n==2){
+			return adjacentDown;
+		}
+		return adjacentLeft;
 	}
 
+	//Should just pass a reference to the grid
+	public static void setNeighbours(Square[][] squares,int h,int w) {
+		for(int i=0;i<h;i++){
+			for(int j=0;j<w;j++){
+				if(i>0){
+					squares[i][j].adjacentUp = squares[i-1][j];
+				}
+				if(j>0){
+					squares[i][j].adjacentLeft = squares[i][j-1];
+				}
+				if(i<h-1){
+					squares[i][j].adjacentDown = squares[i+1][j];
+				}
+				if(j<w-1){
+					squares[i][j].adjacentRight = squares[i][j+1];
+				}
+			}
+		}
+	}
 
+	//Dont know if this will be useful
 	private String determineWhichDirection(Square square) {
 		String direction = null;
         if (this.row == square.row+1 && this.col == square.col)

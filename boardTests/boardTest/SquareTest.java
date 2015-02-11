@@ -1,3 +1,5 @@
+package boardTest;
+
 import static org.junit.Assert.*;
 import board.*;
 import org.junit.Test;
@@ -6,7 +8,8 @@ import java.util.Arrays;
 
 
 public class SquareTest {
-
+	
+	/*
 	@Test
 	public void testSquareConstructor() {
        Square square = new Square(5, 5);
@@ -15,49 +18,37 @@ public class SquareTest {
        assertEquals("Expected adjacentDown value mismatch ", null, square.adjacentDown);
        assertEquals("Expected adjacentLeft value mismatch ", null, square.adjacentLeft);
        assertEquals("Expected adjacentRight value mismatch ", null, square.adjacentRight);
-	}
+	}*/
     
 
 
 	@Test
 	public void testSetNeighbor() {
-	Square square = new Square(5, 5);	
-      Square squareUp = new Square(4, 5);
-      Square squareDown = new Square(6, 5);
-      Square squareLeft = new Square(5, 4);
-      Square squareRight = new Square(5, 6);
-      Square square2 = new Square(5, 5);
-      Square square3 = new Square(4, 4);
-      Square square4 = new Square(6, 6);
-      Square square5 = new Square(3, 7); 
-      square.setNeighbour(squareUp);
-      square.setNeighbour(squareDown);
-      square.setNeighbour(squareLeft);
-      square.setNeighbour(squareRight);
-      assertNotNull("square.adjacentUp.equals(null) ", square.adjacentUp);
-      assertNotNull("square.adjacentDown.equals(null) ", square.adjacentDown);
-      assertNotNull("square.adjacentLeft.equals(null) ", square.adjacentLeft);
-      assertNotNull("square.adjacentRight.equals(null) ", square.adjacentRight);
-      assertEquals("!(square.adjacentUp.equals(squareUp)) ", square.adjacentUp, squareUp);
-      assertEquals("!(square.adjacentUp.equals(squareDown)) ", square.adjacentDown, squareDown);
-      assertEquals("!(square.adjacentUp.equals(squareLeft)) ", square.adjacentLeft, squareLeft);
-      assertEquals("!(square.adjacentUp.equals(squareDown)) ", square.adjacentDown, squareDown);
-      /*assertNotEquals("square.adjacentUp.equals(square2) ", square.adjacentUp, square2);
-      assertNotEquals("square.adjacentUp.equals(square3) ", square.adjacentUp, square3);
-      assertNotEquals("square.adjacentUp.equals(square4) ", square.adjacentUp, square4);
-      assertNotEquals("square.adjacentUp.equals(square5) ", square.adjacentUp, square5);
-      assertNotEquals("square.adjacentDown.equals(square2) ", square.adjacentDown, square2);
-      assertNotEquals("square.adjacentDown.equals(square3) ", square.adjacentDown, square3);
-      assertNotEquals("square.adjacentDown.equals(square4) ", square.adjacentDown, square4);
-      assertNotEquals("square.adjacentDown.equals(square5) ", square.adjacentDown, square5);
-      assertNotEquals("square.adjacentLeft.equals(square2) ", square.adjacentLeft, square2);
-      assertNotEquals("square.adjacentLeft.equals(square3) ", square.adjacentLeft, square3);
-      assertNotEquals("square.adjacentLeft.equals(square4) ", square.adjacentLeft, square4);
-      assertNotEquals("square.adjacentLeft.equals(square5) ", square.adjacentLeft, square5);
-      assertNotEquals("square.adjacentRight.equals(square2) ", square.adjacentRight, square2);
-      assertNotEquals("square.adjacentRight.equals(square3) ", square.adjacentRight, square3);
-      assertNotEquals("square.adjacentRight.equals(square4) ", square.adjacentRight, square4);
-      assertNotEquals("square.adjacentright.equals(square5) ", square.adjacentRight, square5);*/
+		int w=2;
+		int h=2;
+		Square[][] squares = new Square[w][h];
+		for(int i=0;i<w;i++){
+			for(int j=0;j<h;j++){
+				squares[i][j] = new Square(i,j);
+			}
+		}
+		Square.setNeighbours(squares, h, w);
+		for(int i=0;i<w;i++){
+			for(int j=0;j<h;j++){
+				if(i>0){
+					assertEquals("squares[i][j] with i>0 should have squares[i-1][j] as its UP neighbor",squares[i][j].getNeighbour(0),squares[i-1][j]);
+				}
+				if(j>0){
+					assertEquals("squares[i][j] with j>0 should have squares[i][j-1] as its LEFT neighbor",squares[i][j].getNeighbour(3),squares[i][j-1]);
+				}
+				if(i<w-1){
+					assertEquals("squares[i][j] with i<h-1 should have squares[i+1][j] as its Down neighbor",squares[i][j].getNeighbour(2),squares[i+1][j]);
+				}
+				if(j<h-1){
+					assertEquals("squares[i][j] with j<w-1 should have squares[i][j+1] as its Right neighbor",squares[i][j].getNeighbour(1),squares[i][j+1]);
+				}
+			}
+		}
 	}
 
 	@Test

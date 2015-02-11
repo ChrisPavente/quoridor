@@ -31,33 +31,12 @@ public class Player{
 	/*
 	Any move call assumes that the square is a legal place for a player to go
 	Display server will check the actual validity of the move
+	follows the same 0-3 directions as Square
+	0=north,...,3=left
 	*/
-	public void moveUp(){
-		if(square.adjacentUp ==null){
-			//BREAK!!
-		}
-		square = square.adjacentUp;
-	}
-	
-	public void moveDown(){
-		if(square.adjacentDown ==null){
-			//BREAK!!
-		}
-		square = square.adjacentDown;
-	}
-	
-	public void moveLeft(){
-		if(square.adjacentDown ==null){
-			//BREAK!!
-		}
-		square = square.adjacentLeft;
-	}
-	
-	public void moveRight(){
-		if(square.adjacentDown ==null){
-			//BREAK!!
-		}
-		square = square.adjacentRight;
+	public void move(int n){
+		Square s = square.getNeighbour(n);
+		square =s;
 	}
 
 	
