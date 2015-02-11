@@ -32,8 +32,9 @@ public class Board {
 	//Added param numberOfPlayers as Board needs to know how many player objects to make
 	//now constructs a board object, which has a reference to the list of players
 	public Board(int numberOfPlayers) {
-		if(numberOfPlayers !=2 || numberOfPlayers!=4){
+		if(numberOfPlayers !=2 && numberOfPlayers!=4){
 			//BREAK
+			throw new IllegalArgumentException("Must have 2 or 4 players");
 		}
 		createGrid();
 		int w = WALLS/4; //the number of walls each player will be getting
@@ -59,22 +60,7 @@ public class Board {
 		 Square.setNeighbours(grid, HEIGHT,WIDTH);
 	}  
 
-	//will be fixed later to implement players 
-	public Position setStartingPosition() {
-		Position start = new Position(grid[0][4]);
-		grid[0][4].isNowOccupied();
-		return start;
-	}
-
-	//Only makes a single move down for now
-	public Position makeMove(String move, Position pos) {
-        if (move.equals("Down")) {
-        	grid[pos.getPosition().getRow()][pos.getPosition().getColumn()].isFree();
-        	pos.moveDown();
-        	grid[pos.getPosition().getRow()][pos.getPosition().getColumn()].isNowOccupied();
-        }
-        return pos;
-	}
+	
 
 	//Returns the location of the square sent
 	//
@@ -86,6 +72,9 @@ public class Board {
 	//The display server will check the legality
 	//Checks now if there is a wall already there, if not places a wall
 	public boolean placeWall(int i,int j){
+		if(i==0 || j==0 || i==8 || j==8){
+			return false;
+		}
 		for(Player p:players){
 			if(p.getSquare() ==grid[i][j]){
 				return false;
@@ -98,11 +87,29 @@ public class Board {
 		return false;
 	}
 	
+	//Undoes the placement of a wall, will be useful when checking legal moves
+	//Super slow, but it works
+	public void unDoPlaceWall(int i,int j){
+		//grid[i][j] = new Square(i,j);
+		Square.setNeighbours(grid, HEIGHT,WIDTH);
+	}
+	
+	
 	public Square getSquareAt(int i,int j){
 		return grid[i][j];
 	}
+	
+	//Returns the list of players (so we can test that they are in the right spots of the grid
+	public List<Player> getPlayers(){
+		return players;
+	}
 
-
+	//Put code for making a move here
+	//It should return false if the move was not legal
+	//We will encode the shortest path algorithm later
+	public boolean makeMove(String s){
+		return false;
+	}
 		
 
 }

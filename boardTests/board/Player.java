@@ -1,15 +1,19 @@
 package board;
 
+import java.util.List;
+
 import board.Square;
 
 public class Player{
 
 	private Square square;
+	private Square oldLoc;
 	private int walls;
 
 	//Player has a reference to where it in on the board
 	public Player(Square s,int walls) {
 	this.square = s;
+	this.oldLoc =s;
 	this.walls=walls;
 	}	
 	
@@ -33,10 +37,18 @@ public class Player{
 	Display server will check the actual validity of the move
 	follows the same 0-3 directions as Square
 	0=north,...,3=left
+	
+	Keeps moving until we are over every player in the way
 	*/
-	public void move(int n){
+	public boolean move(int n, List<Player> people){
 		Square s = square.getNeighbour(n);
+		if(s instanceof Wall){
+			square = oldLoc;
+			return false;
+		}
 		square =s;
+		
+		return false;
 	}
 
 	
