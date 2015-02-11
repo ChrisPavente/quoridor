@@ -30,5 +30,7 @@ public class BoardTest {
 		board.placeWall(2,2);
 		Square s = board.getSquareAt(2,2);
 		assert(s instanceof Wall);
+		boolean b = board.placeWall(2, 2);
+		assertEquals("After trying to place another wall, we should have a problem",b,false);
 	}
 }

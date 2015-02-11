@@ -56,6 +56,7 @@ public class Board {
                    grid[i][k] = new Square(i,k);
   			  }
 		 }
+		 Square.setNeighbours(grid, HEIGHT,WIDTH);
 	}  
 
 	//will be fixed later to implement players 
@@ -83,8 +84,18 @@ public class Board {
 	
 	//Assumes that the place the wall is to be placed is already legal
 	//The display server will check the legality
-	public void placeWall(int i,int j){
-		grid[i][j] = new Wall(grid[i][j]);
+	//Checks now if there is a wall already there, if not places a wall
+	public boolean placeWall(int i,int j){
+		for(Player p:players){
+			if(p.getSquare() ==grid[i][j]){
+				return false;
+			}
+		}
+			if(!(grid[i][j] instanceof Wall)){
+				grid[i][j] = new Wall(grid[i][j]);
+				return true;
+			}
+		return false;
 	}
 	
 	public Square getSquareAt(int i,int j){
