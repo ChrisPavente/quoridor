@@ -19,8 +19,6 @@ public class Board {
 	private final int HEIGHT = 9;
 	//number of columns
 	private final int WIDTH = 9;
-	//
-	//private static final int 
 	
 	//Two-dimensional array that will represent the grid
 	//Maybe make this of type square and make a new square object that will be able to have contents
@@ -37,16 +35,31 @@ public class Board {
 			throw new IllegalArgumentException("Must have 2 or 4 players");
 		}
 		createGrid();
-		int w = WALLS/4; //the number of walls each player will be getting
 		players = new ArrayList<Player>();
-		players.add(new Player(grid[0][4],w));
-		players.add(new Player(grid[8][4],w));
-		
-		if(numberOfPlayers==4){
-			players.add(new Player(grid[4][0],w));
-			players.add(new Player(grid[4][8],w));
+		if (numberOfPlayers == 2) {
+			int w = WALLS/2; //number of walls being given to players
+			players.add(new Player(setStartingPosition(1),w)));
+			players.add(new Player(setStartingPosition(2), w));
+		} else {
+			int w = WALLS/4;
+			players.add(new Player(setStartingPosition(1),w));
+			players.add(new Player(setStartingPosition(2),w)));
+			players.add(new Player(setStartingPosition(3),w)));
+			players.add(new Player(setStartingPosition(4),w)));
 		}
-		
+	}
+
+	//Gets the starting location for which player it is and returns it
+	private Square setStartingPosition(int player) {
+		if (player == 1) {
+			return grid[0][4];
+		} else if (player == 2) {
+			return grid[8][4];
+		} else if (player == 3) {
+			return grid[4][0];
+		} else {
+			return grid[4][8];
+		}
 	}
 
 	//Must be private or this can be called at any time wiping out the current board
@@ -107,7 +120,9 @@ public class Board {
 	//Put code for making a move here
 	//It should return false if the move was not legal
 	//We will encode the shortest path algorithm later
-	public boolean makeMove(String s){
+	//
+	public boolean makeMove(String s, Player p){
+		//if ()
 		return false;
 	}
 		
