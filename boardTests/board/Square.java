@@ -105,6 +105,51 @@ public class Square {
 	public void isFree() {
 		this.occupied = false;
 	}
+	
+	//Figures out in what direction the two squares are linked (if they even are) and breaks the link between them
+	public boolean breakLink(Square s){
+		if(this.adjacentDown ==s){
+			this.adjacentDown =null;
+			s.adjacentUp = null;
+		}
+		else if(this.adjacentUp ==s){
+			this.adjacentUp =null;
+			s.adjacentDown = null;
+		}
+		else if(this.adjacentLeft ==s){
+			this.adjacentLeft =null;
+			s.adjacentRight = null;
+		}
+		else if(this.adjacentRight ==s){
+			this.adjacentRight = null;
+			s.adjacentLeft = null;
+		}
+		else{
+			return false;
+		}
+		return true;
+	}
+	
+	//Given a square and a direction relinks the square in that direction
+	//Assumes the square given is supposed to be adjacent to this
+	public void reLink(Square s, int n){
+		if(n==0){
+			this.adjacentUp = s;
+			s.adjacentDown = this;
+		}
+		else if(n==1){
+			this.adjacentRight =s;
+			s.adjacentLeft = this;
+		}
+		else if(n==2){
+			this.adjacentDown =s;
+			s.adjacentUp =this;
+		}
+		else if(n==3){
+			this.adjacentLeft =s;
+			s.adjacentRight = this;
+		}
+	}
 
 
 }

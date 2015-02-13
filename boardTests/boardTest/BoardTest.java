@@ -29,13 +29,13 @@ public class BoardTest {
 	@Test
 	public void testPlaceWall(){
 		Board board = new Board(2);
-		board.placeWall(2,2);
+		board.placeWall(2,2,2,3);
 		Square s = board.getSquareAt(2,2);
+		assertEquals("s's adjacent down should be null",s.getNeighbour(2),null);
 		System.out.println(s);
-		assert(s instanceof Wall);
-		boolean b = board.placeWall(2, 2);
+		boolean b = board.placeWall(2, 2,2,3);
 		assertEquals("After trying to place another wall, we should have a problem",b,false);
-		board.unDoPlaceWall(2, 2);
+		board.unDoPlaceWall(2, 2, 2, 3);
 		Square a = board.getSquareAt(2,2);
 		System.out.println(a);
 		assert(a!=s);

@@ -20,7 +20,24 @@ public class SquareTest {
        assertEquals("Expected adjacentRight value mismatch ", null, square.adjacentRight);
 	}*/
     
+	@Test
+	public void unLinkTest(){
+		int w=2;
+		int h=2;
+		Square[][] squares = new Square[w][h];
+		for(int i=0;i<w;i++){
+			for(int j=0;j<h;j++){
+				squares[i][j] = new Square(i,j);
+			}
+		}
+		if(squares[1][1].breakLink(squares[0][0])){
+			assertEquals("Should break" ,true,false);
+		}
+		if(squares[1][1].breakLink(squares[1][0])){
+			assertEquals("Shouldnt break", true,true);
+		}
 
+	}
 
 	@Test
 	public void testSetNeighbor() {

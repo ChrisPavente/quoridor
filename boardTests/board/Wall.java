@@ -1,7 +1,9 @@
 package board;
 
 public class Wall extends Square {
-
+	/**
+	@Not needed anymore
+	*/
 	public Wall(Square s) {
 		super(s.getRow(),s.getColumn());
 		reLink(s);

@@ -37,10 +37,10 @@ public class Board {
 		createGrid();
 		int w = WALLS/numberOfPlayers;
 		players = new ArrayList<Player>();
-		players.add(new Player(grid[0][4],w)));
+		players.add(new Player(grid[0][4],w));
 		players.add(new Player(grid[8][4], w));
 		if (numberOfPlayers == 4) {
-			players.add(new Player(grid[4][0],w)));
+			players.add(new Player(grid[4][0],w));
 			players.add(new Player(grid[4][8], w));
 		}
 	}
@@ -67,27 +67,47 @@ public class Board {
 	//Assumes that the place the wall is to be placed is already legal
 	//The display server will check the legality
 	//Checks now if there is a wall already there, if not places a wall
-	public boolean placeWall(int i,int j){
-		if(i==0 || j==0 || i==8 || j==8){
+	// (i,j)-(a,b) represents the "top" half of the wall
+	//That is the wall is between (i,j) and (i,j+1) if its horizontal etc.
+	public boolean placeWall(int i,int j, int a, int b){
+		if((i==0 && a==0)|| (j==0 && b==0) || (i==8 && a==8) || (j==8 && b==8)){
 			return false;
 		}
-		for(Player p:players){
-			if(p.getSquare() ==grid[i][j]){
-				return false;
-			}
+		boolean check = false;
+		if(Math.abs(i-a)==1){
+			//The wall is horizontal
+			Square s =  grid[i][j];
+			check = s.breakLink(grid[i][j+1]);
+			s = grid[a][b];
+			check = check && s.breakLink(grid[a][b+1]);
 		}
-			if(!(grid[i][j] instanceof Wall)){
-				grid[i][j] = new Wall(grid[i][j]);
-				return true;
-			}
-		return false;
+		if(Math.abs(j-b)==1){
+			Square s =  grid[i][j];
+			check = s.breakLink(grid[i+1][j]);
+			s = grid[a][b];
+			check = check && s.breakLink(grid[a+1][b]);
+		}
+		
+		return check;
 	}
 	
 	//Undoes the placement of a wall, will be useful when checking legal moves
 	//Super slow, but it works
-	public void unDoPlaceWall(int i,int j){
-		//grid[i][j] = new Square(i,j);
-		Square.setNeighbours(grid, HEIGHT,WIDTH);
+	//Assumes placewall has already been called just before hand
+	public void unDoPlaceWall(int i,int j, int a, int b){
+		if(Math.abs(i-a)==1){
+			//The wall is horizontal
+			Square s =  grid[i][j];
+			s.reLink(grid[i][j+1], 2);
+			s = grid[a][b];
+			s.reLink(grid[a][b+1],2);
+		}
+		if(Math.abs(j-b)==1){
+			Square s =  grid[i][j];
+			s.reLink(grid[i+1][j],1);
+			s = grid[a][b];
+			s.reLink(grid[a+1][b],1);
+		}
 	}
 	
 	
