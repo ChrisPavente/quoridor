@@ -31,7 +31,14 @@ public class Player{
 	
 	
 	
-	
+	//this move method moves the player to a specified square
+	//the square parameter is assumed to be the legal move
+	//Realistically shouldn't ever need to return false
+	//So returns nothing
+	public void move(Square s) {
+		oldLoc = square;
+		square = s;
+	} 
 	/*
 	Any move call assumes that the square is a legal place for a player to go
 	Display server will check the actual validity of the move
@@ -40,6 +47,7 @@ public class Player{
 	
 	Keeps moving until we are over every player in the way
 	*/
+	//I am unsure what the purpose of this method is
 	public boolean move(int n, List<Player> people){
 		Square s = square.getNeighbour(n);
 		if(s instanceof Wall){
@@ -47,7 +55,6 @@ public class Player{
 			return false;
 		}
 		square =s;
-		
 		return false;
 	}
 

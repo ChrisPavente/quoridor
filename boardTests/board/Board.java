@@ -24,6 +24,8 @@ public class Board {
 	//Maybe make this of type square and make a new square object that will be able to have contents
 	private Square [][] grid;
 	private List<Player> players;
+	//Keeps track of what player's turn it is
+	private int current;
     
     //Constructor
     //builds the board itself
@@ -36,6 +38,7 @@ public class Board {
 		}
 		createGrid();
 		int w = WALLS/numberOfPlayers;
+		current = 0;
 		players = new ArrayList<Player>();
 		players.add(new Player(grid[0][4],w));
 		players.add(new Player(grid[8][4], w));
@@ -123,9 +126,53 @@ public class Board {
 	//Put code for making a move here
 	//It should return false if the move was not legal
 	//We will encode the shortest path algorithm later
-	public boolean makeMove(String s) {
-		return false;
+	//
+	//s for character move is of the form: [rowLetter]-[columnRomanNumeral]. Example: A-VIII
+	//s for a wall placement is of the form: [rowLetter]-[columnRomanNumeral]_[rowLetter]-[columnRomanNumeral] Example: A-V_A-VI
+	//Legal move tests have not been added yet
+	public boolean makeMove(String s){
+		boolean isLegal = false;
+		controlCurrent(); //keeps control within the range of the size of the player list
+		if (s.contains("_")) {
+			int r1 = convertRowToInt(s.charAt(0));
+			int c1 = converColToInt(s.substring(2, s.indexOf("_")));
+			int r2 = convertRowToInt(s.charAt((char)(s.indexOf("_")+1)));
+			int c2 = converColToInt(s.substring(s.lastIndexOf("-")+1));
+ 			//Test if this is a legal wall place and return false if it isnt
+ 			//Then test if the player has walls left and return false if they dont
+ 			players.get(current).useWall();
+ 			placeWall(r1, c1, r2, c2);
+
+		} else if (s.contains("-")) {
+			int r = convertRowToInt(s.charAt(0));
+			int c = converColToInt(s.substring(2));
+			//Test if this is a legal character move and return false if it isnt
+			players.get(current).move(getSquareAt(r, c));
+		} else 
+		current++;
+		return isLegal;
 	}
-		
+
+	//Converts the the row character to its equivalent row int (0-8)
+	private int convertRowToInt(char c) {
+		return c - 65;
+
+	}
+
+	//converts the column roman numeral to its equivalent colum int (0-8)
+	private int converColToInt(String s) {
+		if (s.equals("IV"))
+			return 3;
+		if (s.equals("IX"))
+			return 8;
+		int col = 0;
+		for (int i = 0; i < s.length(); i++ ) {
+        	if (s.charAt(i) =='V')
+            	col += 5;
+          	else if (s.charAt(i) == 'I')
+            	col += 1;
+    	}
+        return col-1;
+	}
 
 }
