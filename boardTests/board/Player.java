@@ -5,15 +5,17 @@ import java.util.List;
 import board.Square;
 
 public class Player{
-
+	
+	private int num; //Knows which number player it is, MAY helpful for shortest path
 	private Square square;
-	private Square oldLoc;
 	private int walls;
+	private String oldShortestPath;//Keeps a representation of the shortest path
+									//We hold on to this, because in some cases the shortest path hasn't changed so we can use our old path
 
 	//Player has a reference to where it in on the board
-	public Player(Square s,int walls) {
+	public Player(Square s,int walls,int num) {
+	this.num = num;
 	this.square = s;
-	this.oldLoc =s;
 	this.walls=walls;
 	}	
 	
@@ -36,7 +38,6 @@ public class Player{
 	//Realistically shouldn't ever need to return false
 	//So returns nothing
 	public void move(Square s) {
-		oldLoc = square;
 		square = s;
 	} 
 	/*
@@ -51,12 +52,14 @@ public class Player{
 	public boolean move(int n, List<Player> people){
 		Square s = square.getNeighbour(n);
 		if(s instanceof Wall){
-			square = oldLoc;
+			//square = oldLoc;
 			return false;
 		}
 		square =s;
 		return false;
 	}
+	
+
 
 	
 } 

@@ -40,11 +40,11 @@ public class Board {
 		int w = WALLS/numberOfPlayers;
 		current = 0;
 		players = new ArrayList<Player>();
-		players.add(new Player(grid[0][4],w));
-		players.add(new Player(grid[8][4], w));
+		players.add(new Player(grid[0][4],w,0));
+		players.add(new Player(grid[8][4], w,1));
 		if (numberOfPlayers == 4) {
-			players.add(new Player(grid[4][0],w));
-			players.add(new Player(grid[4][8], w));
+			players.add(new Player(grid[4][0],w,2));
+			players.add(new Player(grid[4][8], w,3));
 		}
 	}
 
@@ -96,7 +96,7 @@ public class Board {
 	
 	//Undoes the placement of a wall, will be useful when checking legal moves
 	//Super slow, but it works
-	//Assumes placewall has already been called just before hand
+	//Assumes place wall has already been called just before hand
 	public void unDoPlaceWall(int i,int j, int a, int b){
 		if(Math.abs(i-a)==1){
 			//The wall is horizontal
@@ -132,7 +132,7 @@ public class Board {
 	//Legal move tests have not been added yet
 	public boolean makeMove(String s){
 		boolean isLegal = false;
-		controlCurrent(); //keeps control within the range of the size of the player list
+		//controlCurrent(); //keeps control within the range of the size of the player list
 		if (s.contains("_")) {
 			int r1 = convertRowToInt(s.charAt(0));
 			int c1 = converColToInt(s.substring(2, s.indexOf("_")));
@@ -142,6 +142,8 @@ public class Board {
  			//Then test if the player has walls left and return false if they dont
  			players.get(current).useWall();
  			placeWall(r1, c1, r2, c2);
+ 			//Test shortest Path
+ 			//undo placement if needed
 
 		} else if (s.contains("-")) {
 			int r = convertRowToInt(s.charAt(0));
