@@ -49,15 +49,7 @@ public class Player{
 	Keeps moving until we are over every player in the way
 	*/
 	//I am unsure what the purpose of this method is
-	public boolean move(int n, List<Player> people){
-		Square s = square.getNeighbour(n);
-		if(s instanceof Wall){
-			//square = oldLoc;
-			return false;
-		}
-		square =s;
-		return false;
-	}
+	
 	
 
 

@@ -176,5 +176,15 @@ public class Board {
     	}
         return col-1;
 	}
+	
+	
+	public String toString(){
+		
+		return "";
+	}
+	
+	
+	
+	
 
 }
