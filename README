@@ -1,0 +1,40 @@
+At this moment we dont have many packages, but I'm going to document our board package to the best of my ability. 
+
+Package board-
+    Player.java-
+        Constructor: Player(Square s, int walls, int n)
+                       --takes in the Square the player is in, the number of walls the player has and the number player (dont know if this will stay)
+        Fields:int walls, Square square
+        Methods: getSquare() returns the field square
+                 getWallNum() returns walls
+                 useWall() decrements walls by one
+                 move(Square s) sets square to s
+
+    Square.java-
+        Static Class Methods:
+            - setNeightbours(Square[][] squares, int h, int w)
+                Sets up the squares of the array to be linked to
+                the squares adjacent to it in the array
+
+        Constructor: Square(int row, int col)
+                      -- new Square object has null reference for Up,Right,Down,Left and sets this.row to row and this.col to col
+
+        Fields: int row, int col, Square adjacent-(Up,Down,Left,Right)
+        Methods: getNeighbour(int n) returns the square adjacent to this square in the direction of n, that is n=0 is Up n=1 is Right n=2 is Down and n=3 is Left.
+                 getRow() returns row
+                 getCol() returns col
+                 breakLink(Square s) breaks the link between this and Square s if there is one and returns false if there wasn't a link to begin with.
+                 relink(Square s, int n) links this and Square s in the direction indicated by n, that is if n=0 this.adjacentDown becomes s and s.adjacentUp becomes this
+                
+    Board.java- Still heavily in development
+        Static Fields: WALLS, HEIGHT, WIDTH
+        Constructor: Board(int n) the number of players playing the game
+        Fields: Square[][] grid, List<Player> players
+
+        Methods: getPlayers() returns the list of players
+                 getSquare(int i, int j) returns grid[i][j]
+                 makeMove(String s) makes the move encoded in String S if its a legal move or will return false if it is not
+                 ***There are more methods then documented here but some of those will be turned into to private methods or removed all together
+      
+             
+  
