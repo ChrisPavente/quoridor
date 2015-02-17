@@ -177,10 +177,63 @@ public class Board {
         return col-1;
 	}
 	
-	
-	public String toString(){
+	/**A |w| or -w- represents a wall in the grid, where as a |+| or -+- represents a legal path
+	 * any blank space is a legal place for a player to reside and the number (0,1,2,3) represents the 
+	 * players 0,1,2,3 respectively.
+	 * 
+	 * @return returns a String representation of Board
+	 */
+	public String toString(){	   
+		String a ="---------------------------------------\n";
+		String s ="" +a;
+		List<Square> temp = new ArrayList<Square>();
+		for(Player p: players){
+			//makes a temp copy of players
+			temp.add(p.getSquare());
+			
+		}
 		
-		return "";
+		for(int i=0;i<9;i++){
+			String temp1 = "|w|";
+			String temp2 = "|-";
+			for(int j=0;j<9;j++){
+				Square current = grid[i][j];
+				if(temp.contains(current)){
+					int n = temp.indexOf(current);
+					temp1 +=n;
+				}
+				else{
+					temp1 += " ";
+				}
+				if(current.getNeighbour(1)==null){
+					temp1 += "|w|";
+				}
+				else
+					temp1 += "|+|";
+	
+				if(current.getNeighbour(2)==null){
+					temp2 += "-w-";
+				}
+				else
+					temp2 += "-+-";
+			 
+				if(j<8){
+				 temp2 +="-";
+				}
+			}
+			temp1 += "\n";
+			temp2 += "-|" + "\n";
+			s += temp1;
+			//if its not the last line, add temp2
+			//if not use the template String a
+			if(i!=8){
+				s +=temp2;
+			}
+			else{
+				s+=a;
+			}
+		}
+		return s;
 	}
 	
 	

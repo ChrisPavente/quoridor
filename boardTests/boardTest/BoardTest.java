@@ -47,7 +47,22 @@ public class BoardTest {
 		Board board = new Board(2);
 		List<Player> p = board.getPlayers();
 		assertEquals("p1 should be at square [0][4]", p.get(0).getSquare() , board.getSquareAt(0, 4));
-			
+	}
+	
+	@Test
+	public void testToString(){
+		Board board = new Board(4);
+		System.out.println(board);
+		board.placeWall(2,2,2,3);
+		board.placeWall(1,2,1,3);
+		Player p =board.getPlayers().get(0);
+		p.move(board.getSquareAt(2, 5));
+		System.out.println(board);
+		
+		
+		
+		
+		
 		
 	}
 }

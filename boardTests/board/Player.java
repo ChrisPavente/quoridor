@@ -14,7 +14,7 @@ public class Player{
 
 	//Player has a reference to where it in on the board
 	public Player(Square s,int walls,int num) {
-	this.num = num;
+	this.num =num;
 	this.square = s;
 	this.walls=walls;
 	}	
@@ -49,6 +49,11 @@ public class Player{
 	Keeps moving until we are over every player in the way
 	*/
 	//I am unsure what the purpose of this method is
+
+	public int getNum() {
+		return num;
+	}
+
 	
 	
 
