@@ -24,8 +24,6 @@ public class Board {
 	//Maybe make this of type square and make a new square object that will be able to have contents
 	private Square [][] grid;
 	private List<Player> players;
-	//Keeps track of what player's turn it is
-	private int current;
     
     //Constructor
     //builds the board itself
@@ -38,13 +36,12 @@ public class Board {
 		}
 		createGrid();
 		int w = WALLS/numberOfPlayers;
-		current = 0;
 		players = new ArrayList<Player>();
-		players.add(new Player(grid[0][4],w,0));
-		players.add(new Player(grid[8][4], w,1));
+		players.add(new Player(grid[0][4],w));
+		players.add(new Player(grid[8][4], w));
 		if (numberOfPlayers == 4) {
-			players.add(new Player(grid[4][0],w,2));
-			players.add(new Player(grid[4][8], w,3));
+			players.add(new Player(grid[4][0],w));
+			players.add(new Player(grid[4][8], w));
 		}
 	}
 
@@ -96,7 +93,7 @@ public class Board {
 	
 	//Undoes the placement of a wall, will be useful when checking legal moves
 	//Super slow, but it works
-	//Assumes place wall has already been called just before hand
+	//Assumes placewall has already been called just before hand
 	public void unDoPlaceWall(int i,int j, int a, int b){
 		if(Math.abs(i-a)==1){
 			//The wall is horizontal
@@ -130,30 +127,34 @@ public class Board {
 	//s for character move is of the form: [rowLetter]-[columnRomanNumeral]. Example: A-VIII
 	//s for a wall placement is of the form: [rowLetter]-[columnRomanNumeral]_[rowLetter]-[columnRomanNumeral] Example: A-V_A-VI
 	//Legal move tests have not been added yet
-	public boolean makeMove(String s){
-		boolean isLegal = false;
-		//controlCurrent(); //keeps control within the range of the size of the player list
-		if (s.contains("_")) {
-			int r1 = convertRowToInt(s.charAt(0));
-			int c1 = converColToInt(s.substring(2, s.indexOf("_")));
-			int r2 = convertRowToInt(s.charAt((char)(s.indexOf("_")+1)));
-			int c2 = converColToInt(s.substring(s.lastIndexOf("-")+1));
- 			//Test if this is a legal wall place and return false if it isnt
- 			//Then test if the player has walls left and return false if they dont
- 			players.get(current).useWall();
- 			placeWall(r1, c1, r2, c2);
- 			//Test shortest Path
- 			//undo placement if needed
+	//paremeter p: is the player in the list of players who is making the move
+	public boolean makeMove(String s, int p){
+            boolean isLegal = false;
+            if (s.contains("_")) {
+                  int r1 = convertRowToInt(s.charAt(0));
+                  int c1 =    converColToInt(s.substring(2, s.indexOf("_")));
+                  int r2 = convertRowToInt(s.charAt((char)(s.indexOf("_")+1)));
+                  int c2 = converColToInt(s.substring(s.lastIndexOf("-")+1));
+                  isLegal = checkIfLegalWallPlace(r1, c1, r2, c2);
+                  if (isLegal == false) 
+                        return isLegal;
+                  if (players.get(p).getWallNum() == 0)
+                        return false;
+                  players.get(p).useWall();
+                  placeWall(r1, c1, r2, c2);
 
-		} else if (s.contains("-")) {
-			int r = convertRowToInt(s.charAt(0));
-			int c = converColToInt(s.substring(2));
-			//Test if this is a legal character move and return false if it isnt
-			players.get(current).move(getSquareAt(r, c));
-		} else 
-		current++;
-		return isLegal;
-	}
+            } else if (s.contains("-")) {
+                  int r = convertRowToInt(s.charAt(0));
+                  int c = converColToInt(s.substring(2));
+                  isLegal = checkIfLegalPlayerMove(r, c, p);
+                  if (!(isLegal))
+                        return isLegal;
+                  players.get(p).move(getSquareAt(r, c));
+            }
+            //add the method call here to print the board to view board
+            return isLegal;
+    }
+	
 
 	//Converts the the row character to its equivalent row int (0-8)
 	private int convertRowToInt(char c) {
@@ -176,68 +177,86 @@ public class Board {
     	}
         return col-1;
 	}
-	
-	/**A |w| or -w- represents a wall in the grid, where as a |+| or -+- represents a legal path
-	 * any blank space is a legal place for a player to reside and the number (0,1,2,3) represents the 
-	 * players 0,1,2,3 respectively.
-	 * 
-	 * @return returns a String representation of Board
-	 */
-	public String toString(){	   
-		String a ="---------------------------------------\n";
-		String s ="" +a;
-		List<Square> temp = new ArrayList<Square>();
-		for(Player p: players){
-			//makes a temp copy of players
-			temp.add(p.getSquare());
-			
-		}
-		
-		for(int i=0;i<9;i++){
-			String temp1 = "|w|";
-			String temp2 = "|-";
-			for(int j=0;j<9;j++){
-				Square current = grid[i][j];
-				if(temp.contains(current)){
-					int n = temp.indexOf(current);
-					temp1 +=n;
-				}
-				else{
-					temp1 += " ";
-				}
-				if(current.getNeighbour(1)==null){
-					temp1 += "|w|";
-				}
-				else
-					temp1 += "|+|";
-	
-				if(current.getNeighbour(2)==null){
-					temp2 += "-w-";
-				}
-				else
-					temp2 += "-+-";
-			 
-				if(j<8){
-				 temp2 +="-";
-				}
-			}
-			temp1 += "\n";
-			temp2 += "-|" + "\n";
-			s += temp1;
-			//if its not the last line, add temp2
-			//if not use the template String a
-			if(i!=8){
-				s +=temp2;
-			}
-			else{
-				s+=a;
-			}
-		}
-		return s;
-	}
-	
-	
-	
-	
+
+	 //These methods are here because the makeMove method needs them
+      //Ignores if there is a wall there already since that case is handled in another method
+      //Assumes a player will not be cut off from winning
+      private boolean checkIfLegalWallPlace(int r1, int c1, int r2, int c2) {
+            if (r1>8 || r1<0 || c1>8 || c1<0 || r2>8 || r2<0 || c2>8 || c2<0)
+                  return false;
+            if (checkIfPlayerIsThere(r1, c1))
+                  return false;
+            if (checkIfPlayerIsThere(r2, c2))
+                  return false;
+            if (r1 != r2 && c1 != c2)
+                  return false;
+            if ((r1 == 0 && r2 == 0) || (r1 == 8 && r2 == 8))
+            	return false;
+            if ((c1 == 0 && c2 == 0) || (c1 == 8 && c2 == 8))
+            	return false;
+            if (Math.abs(r1-r2)!=1 && Math.abs(c1-c2)!=1)
+                  return false;
+            return true;
+      }
+
+      //Returns false if move is illegal, true otherwise
+      private boolean checkIfLegalPlayerMove(int r, int c, int p) {
+            if (r>8 || r<0 || c>8 || c<0)
+                  return false;
+            if (checkIfWallIsThere(r, c))
+                  return false;
+            if (checkIfPlayerIsThere(r, c))
+                  return false;
+            Square s = getSquareAt(r, c);
+            //int row = players.get(p).getSquare().getRow();
+            //int col = players.get(p).getSquare().getColumn();
+            //Square pS = getSquareAt(row, col);
+            Square pS = players.get(p).getSquare();
+            if (pS.adjacentUp != null && pS.adjacentUp.equals(s))
+                  return true;
+            if (pS.adjacentDown != null && pS.adjacentDown.equals(s))
+                  return true;
+            if (pS.adjacentLeft != null && pS.adjacentLeft.equals(s))
+                  return true;
+            if (pS.adjacentRight != null && pS.adjacentRight.equals(s))
+                  return true;
+            return false;
+
+      }
+
+      //Returns true if there is a wall at this location
+      private boolean checkIfWallIsThere(int r, int c) {
+            Square s = getSquareAt(r, c);
+            if (s.adjacentUp == null && r>0) {
+                  Square square = getSquareAt(r-1, c);
+                  if (square.adjacentDown == null)
+                        return true;
+            } else if (s.adjacentDown == null && r<8) {
+                   Square square = getSquareAt(r+1, c);
+                   if (square.adjacentUp == null)
+                         return true;
+            } else if (s.adjacentLeft == null && c>0) {
+                  Square square = getSquareAt(r, c-1);
+                  if (square.adjacentRight == null)
+                        return true;
+            } else if (s.adjacentRight == null && c<8) {
+                  Square square = getSquareAt(r, c+1);
+                  if (square.adjacentLeft == null)
+                        return true;
+            }
+            return false;
+      }
+
+      //Returns true if a player is in given coordinates
+      private boolean checkIfPlayerIsThere(int r, int c) {
+            Square s = getSquareAt(r, c);
+            for (int i = 0; i < players.size(); i++) {
+                   if (players.get(i).getSquare().equals(s))
+                         return true;
+            }
+            return false;
+
+      }
+
 
 }
