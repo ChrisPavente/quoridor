@@ -1,5 +1,7 @@
 package board;
 
+import gui.QBoard;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class Board {
 	private List<Player> players; // ArrayList to store the players in the game
 	private int current; // Keeps track of what player's turn it is
     
+	private QBoard graphic;
 	
 	/**
 	 * The Board Constructor.  
@@ -51,6 +54,7 @@ public class Board {
 			players.add(new Player(grid[4][0],w,2));
 			players.add(new Player(grid[4][8], w,3));
 		}
+		newGraphic();
 	}
 
 	
@@ -183,7 +187,7 @@ public class Board {
         boolean isLegal = false;
         if (s.contains("_")) {
               int r1 = convertRowToInt(s.charAt(0));
-              int c1 =    converColToInt(s.substring(2, s.indexOf("_")));
+              int c1 = converColToInt(s.substring(2, s.indexOf("_")));
               int r2 = convertRowToInt(s.charAt((char)(s.indexOf("_")+1)));
               int c2 = converColToInt(s.substring(s.lastIndexOf("-")+1));
               isLegal = checkIfLegalWallPlace(r1, c1, r2, c2);
@@ -406,6 +410,17 @@ public class Board {
 		return s;
 	}
 	
+	public void newGraphic(){
+		graphic = new QBoard(this);
+		for (int i = 0; i < players.size(); i++){
+			graphic.setColorOfSpace(players.get(i).getSquare().getRow(), players.get(i).getSquare().getColumn(),  players.get(i).getColor());
+		}
+	}
+
+	public static void main(String[] args) {
+		Board board = new Board(2);
+		System.out.println(board.toString());
+	}
 	
 	
 	

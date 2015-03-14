@@ -1,5 +1,6 @@
 package board;
 
+import java.awt.Color;
 import java.util.List;
 
 import board.Square;
@@ -18,6 +19,8 @@ public class Player{
 	private String oldShortestPath;//Keeps a representation of the shortest path
 									//We hold on to this, because in some cases the shortest path hasn't changed so we can use our old path
 
+	public final static Color[] color = {Color.yellow, Color.green, Color.blue, Color.red};
+	private Color col;
 
 	/**
 	 * The Player Constructor.
@@ -29,9 +32,10 @@ public class Player{
 	 * @param num: the players reference number
 	 */
 	public Player(Square s,int walls,int num) {
-	this.num =num;
-	this.square = s;
-	this.walls=walls;
+		this.num =num;
+		this.square = s;
+		this.walls=walls;
+		setDefaultColor();
 	}	
 	
 	/**
@@ -79,7 +83,27 @@ public class Player{
 	}
 
 	
+	/**
+	 * Sets the Player's Color to the default Color based on their PlayerID.
+	 */
+	private void setDefaultColor() {
+		if (num > -1 && num < 4) {
+			col = color[num];
+			col = color[num];
+		} else {
+			col = Color.white;
+		}
+
+	}
 	
+	/**
+	 * Returns the Player's Color.
+	 * 
+	 * @return Returns the Player's Color.
+	 */
+	public Color getColor() {
+		return col;
+	}
 
 
 	
