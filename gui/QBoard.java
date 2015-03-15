@@ -76,13 +76,16 @@ public class QBoard extends JFrame implements ActionListener {
 						Insets insets = buttonCanvas.getInsets();
 						button.setBounds(fromLeft + insets.left, fromTop + insets.top, 20, 20);
 						fromLeft += 26;
+						button.addActionListener(this);
 						squares[j/2][i/2]=button;
 					} else { //button wall column
 						JButton button = buttonHelper(i, j);
 						Insets insets = buttonCanvas.getInsets();
 						button.setBounds(fromLeft + insets.left, fromTop + insets.top, 5, 20);
 						fromLeft += 11;
+						button.setVisible(false);
 						vertWalls[j/2][i/2]=button;
+						
 					}
 				}
 				if (walls){ //button wall row
@@ -92,6 +95,7 @@ public class QBoard extends JFrame implements ActionListener {
 					fromLeft += 37;
 					j++;
 					horWalls[j/2][i/2]=button;
+					button.setVisible(false);
 				}
 			}
 			if(!walls){
@@ -112,7 +116,7 @@ public class QBoard extends JFrame implements ActionListener {
 	public JButton buttonHelper(int i, int j){
 		JButton button = new JButton("");
 		button.setName(getRowLetter(i/2+1) + "-" + getColumnRomanNumeral(j/2 + 1));
-		button.addActionListener(this);
+		
 		button.setBackground(SQUARE_DEFAULT_COLOR);
 		buttonCanvas.add(button);
 		return button;
@@ -173,43 +177,66 @@ public class QBoard extends JFrame implements ActionListener {
 		return "ERROR";
 	}
 	
+	public void makeMove(String a,String b){
+		if(a.equals(b)){
+			//movement of character
+			Player temp =board.getPlayers().get(board.getCurrent());
+			setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),Color.black);
+			if(board.makeMove(a)){
+				if(board.isWinner()!=null){
+					System.out.println(board.getCurrent()-1);
+					System.exit(0);
+				}
+			}
+			else{
+				setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
+				return;
+			}
+			setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
+		}
+		else{
+			//must be trying to place a wall
+			if(board.makeMove(a+"_"+b)){
+			int i = board.convertRowToInt(a.charAt(0));
+			int j = board.converColToInt(a.substring(2));
+			int k = board.convertRowToInt(b.charAt(0));
+			int l = board.converColToInt(b.substring(2));
+			
+			if(i !=k){
+				System.out.println("A Wall was placed");
+				vertWalls[j][i].setVisible(true);
+				vertWalls[l][k].setVisible(true);
+			}
+			else if(j !=l){
+				System.out.println("A Wall was placed");
+				horWalls[j][i].setVisible(true);
+				horWalls[l][k].setVisible(true);
+			}
+			}
+			else{
+				System.out.println("CANT PLACE WALL");
+				return;
+			}
+		}
+		System.out.println(("Player " + board.getCurrent() + "'s turn"));
+		
+		
+	}
+	
+	
 	public void actionPerformed(ActionEvent action){
-		this.setName(BOARD_TITLE + " Player " + board.getCurrent() + "'s turn");
+	
 		String move = ((JButton) action.getSource()).getName();
 		if(moveStack.isEmpty()){
 			moveStack.push(move);
 		}
 		else{
-		
-		if(moveStack.peek().equals(move)){
-			System.out.println("Double");
-			Player temp =board.getPlayers().get(board.getCurrent());
-			setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),SQUARE_DEFAULT_COLOR);
-			if(board.makeMove(moveStack.pop())){
-				System.out.println(board);
-				setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
-				setVisible(true);
-				return;
-			}
-			else{
-				//System.exit(0);
-			}
+			makeMove(moveStack.pop(),move);
 		}
-		//domove?
-		else if(board.makeMove(moveStack.pop()+"_"+move)){
-			System.out.println(board);
-		}
-		else{
-			System.out.println("I dont want to be here");
-			//System.exit(0);
-		}
-		
-		}
-		System.out.println(board.getCurrent());
-		System.out.println(move);
+	
 		
 		//System.out.println(board.makeMove(move, board.getCurrent()));
-		initialize();
+		
 		//For testing purposes
 		//Need to figure out a way to get the current player to implement
 		//Tyler's makeMove method and then need to implement in the Board class

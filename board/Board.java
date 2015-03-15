@@ -209,7 +209,6 @@ public class Board {
         }
         //add the method call here to print the board to view board
         if(isLegal){
-        	graphic = new QBoard(this);
         	current = (current+1)%players.size();
         }
         return isLegal;
@@ -222,7 +221,7 @@ public class Board {
 	 * @param c: the row character 
 	 * @return the integer equivalent to the character given
 	 */
-	private int convertRowToInt(char c) {
+	public int convertRowToInt(char c) {
 		return c - 65;
 
 	}
@@ -234,7 +233,7 @@ public class Board {
 	 * @param s: the column Roman numeral
 	 * @return the integer equivalent to the character given
 	 */
-	private int converColToInt(String s) {
+	public int converColToInt(String s) {
 		if (s.equals("IV"))
 			return 3;
 		if (s.equals("IX"))
@@ -431,6 +430,14 @@ public class Board {
 	public int getCurrent() {
 		return current;
 	}
-
+	public Player isWinner(){
+		//Called after a move is made to see if that player won
+		for(Player p: players){
+		if(p.isAWinner()){
+			return p;
+		}
+		}
+		return null;
+	}
 
 }

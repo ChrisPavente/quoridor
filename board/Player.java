@@ -46,6 +46,18 @@ public class Player{
 		return square;
 	}
 	
+	public boolean isAWinner(){
+		//checks if the player is currently in a winning condition
+		if(num==0 && square.getRow()==8){
+			return true;
+		}
+		if(num==1 && square.getRow()==0){
+			return true;
+		}
+		//We dont have more players yet 
+		return false;
+	}
+	
 	/**
 	 * Method to return the number of walls the player has left.
 	 * @return the number of walls the player currently has left to use
