@@ -1,14 +1,16 @@
 package gui;
 
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.util.*;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import board.Board;
+import board.Player;
 
 public class QBoard extends JFrame implements ActionListener {
 
@@ -23,6 +25,7 @@ public class QBoard extends JFrame implements ActionListener {
 	private JPanel buttonCanvas; // Canvas that holds all the buttons of the game
 	
 	private Board board;
+	private Stack<String> moveStack = new Stack<String>();
 	
 	/**
 	 * Quoridor Board GUI Constructor.
@@ -171,8 +174,43 @@ public class QBoard extends JFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent action){
+		this.setName(BOARD_TITLE + " Player " + board.getCurrent() + "'s turn");
 		String move = ((JButton) action.getSource()).getName();
-		System.out.println(move); //For testing purposes
+		if(moveStack.isEmpty()){
+			moveStack.push(move);
+		}
+		else{
+		
+		if(moveStack.peek().equals(move)){
+			System.out.println("Double");
+			Player temp =board.getPlayers().get(board.getCurrent());
+			setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),SQUARE_DEFAULT_COLOR);
+			if(board.makeMove(moveStack.pop())){
+				System.out.println(board);
+				setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
+				setVisible(true);
+				return;
+			}
+			else{
+				//System.exit(0);
+			}
+		}
+		//domove?
+		else if(board.makeMove(moveStack.pop()+"_"+move)){
+			System.out.println(board);
+		}
+		else{
+			System.out.println("I dont want to be here");
+			//System.exit(0);
+		}
+		
+		}
+		System.out.println(board.getCurrent());
+		System.out.println(move);
+		
+		//System.out.println(board.makeMove(move, board.getCurrent()));
+		initialize();
+		//For testing purposes
 		//Need to figure out a way to get the current player to implement
 		//Tyler's makeMove method and then need to implement in the Board class
 		//how to change the color of the square to represent the actual move

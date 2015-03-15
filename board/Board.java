@@ -46,7 +46,7 @@ public class Board {
 		}
 		createGrid();
 		int w = WALLS/numberOfPlayers;
-		current = 0;
+		
 		players = new ArrayList<Player>();
 		players.add(new Player(grid[0][4],w,0));
 		players.add(new Player(grid[8][4], w,1));
@@ -55,6 +55,7 @@ public class Board {
 			players.add(new Player(grid[4][8], w,3));
 		}
 		newGraphic();
+		current=0;
 	}
 
 	
@@ -183,7 +184,7 @@ public class Board {
 	 * 			 for wall placement it is of the form: [rowLetter]-[columnRomanNumeral]_[rowLetter]-[columnRomanNumeral] Example: A-V_A-VI
 	 * @return false if the move was not legal, otherwise return true.
 	 */
-	public boolean makeMove(String s, int p){
+	public boolean makeMove(String s){
         boolean isLegal = false;
         if (s.contains("_")) {
               int r1 = convertRowToInt(s.charAt(0));
@@ -193,20 +194,24 @@ public class Board {
               isLegal = checkIfLegalWallPlace(r1, c1, r2, c2);
               if (isLegal == false) 
                     return isLegal;
-              if (players.get(p).getWallNum() == 0)
+              if (players.get(current).getWallNum() == 0)
                     return false;
-              players.get(p).useWall();
+              players.get(current).useWall();
               placeWall(r1, c1, r2, c2);
 
         } else if (s.contains("-")) {
               int r = convertRowToInt(s.charAt(0));
               int c = converColToInt(s.substring(2));
-              isLegal = checkIfLegalPlayerMove(r, c, p);
+              isLegal = checkIfLegalPlayerMove(r, c, current);
               if (!(isLegal))
-                    return isLegal;
-              players.get(p).move(getSquareAt(r, c));
+                 return isLegal;
+              players.get(current).move(getSquareAt(r, c));
         }
         //add the method call here to print the board to view board
+        if(isLegal){
+        	graphic = new QBoard(this);
+        	current = (current+1)%players.size();
+        }
         return isLegal;
 	}
 
@@ -421,8 +426,11 @@ public class Board {
 		Board board = new Board(2);
 		System.out.println(board.toString());
 	}
-	
-	
-	
+
+
+	public int getCurrent() {
+		return current;
+	}
+
 
 }
