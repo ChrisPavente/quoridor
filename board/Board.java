@@ -111,12 +111,18 @@ public class Board {
 			//The wall is horizontal
 			Square s =  grid[i][j];
 			check = s.breakLink(grid[i][j+1]);
+			if(!check){
+				return check;
+			}
 			s = grid[a][b];
 			check = check && s.breakLink(grid[a][b+1]);
 		}
 		if(Math.abs(j-b)==1){
 			Square s =  grid[i][j];
 			check = s.breakLink(grid[i+1][j]);
+			if(!check){
+				return check;
+			}
 			s = grid[a][b];
 			check = check && s.breakLink(grid[a+1][b]);
 		}
@@ -191,15 +197,15 @@ public class Board {
               int c1 = converColToInt(s.substring(2, s.indexOf("_")));
               int r2 = convertRowToInt(s.charAt((char)(s.indexOf("_")+1)));
               int c2 = converColToInt(s.substring(s.lastIndexOf("-")+1));
-              isLegal = checkIfLegalWallPlace(r1, c1, r2, c2);
+              if (players.get(current).getWallNum()-1 == 0)
+                  return false;
+              isLegal = placeWall(r1, c1, r2, c2);
               if (isLegal == false) 
                     return isLegal;
-              if (players.get(current).getWallNum() == 0)
-                    return false;
+ 
               players.get(current).useWall();
-              placeWall(r1, c1, r2, c2);
-
-        } else if (s.contains("-")) {
+        }  
+        else if (s.contains("-")) {
               int r = convertRowToInt(s.charAt(0));
               int c = converColToInt(s.substring(2));
               isLegal = checkIfLegalPlayerMove(r, c, current);
@@ -261,18 +267,19 @@ public class Board {
     private boolean checkIfLegalWallPlace(int r1, int c1, int r2, int c2) {
           if (r1>8 || r1<0 || c1>8 || c1<0 || r2>8 || r2<0 || c2>8 || c2<0)
                 return false;
-          if (checkIfPlayerIsThere(r1, c1))
-                return false;
-          if (checkIfPlayerIsThere(r2, c2))
-                return false;
+          //if (checkIfPlayerIsThere(r1, c1))
+            //    return false;
+          //if (checkIfPlayerIsThere(r2, c2))
+            //    return false;
           if (r1 != r2 && c1 != c2)
                 return false;
-          if ((r1 == 0 && r2 == 0) || (r1 == 8 && r2 == 8))
+          if ((r1 == 8 && r2 == 8))
           	return false;
-          if ((c1 == 0 && c2 == 0) || (c1 == 8 && c2 == 8))
+          if ((c1 == 8 && c2 == 8))
           	return false;
           if (Math.abs(r1-r2)!=1 && Math.abs(c1-c2)!=1)
                 return false;
+         
           return true;
     }
 
@@ -287,8 +294,8 @@ public class Board {
     private boolean checkIfLegalPlayerMove(int r, int c, int p) {
           if (r>8 || r<0 || c>8 || c<0)
                 return false;
-          if (checkIfWallIsThere(r, c))
-                return false;
+        //  if (checkIfWallIsThere(r, c))
+                //return false;// Tyler this makes no sense, you check later if the square is adjacent, that is all you need
           if (checkIfPlayerIsThere(r, c))
                 return false;
           Square s = getSquareAt(r, c);
@@ -315,24 +322,16 @@ public class Board {
      * @param c: column number of desired location
      * @return true if a wall is present, false otherwise
      */
-    private boolean checkIfWallIsThere(int r, int c) {
+    private boolean checkIfWallIsThere(int r, int c, boolean b) { 
+    	//b is a boolean since we really can only a wall in two places relative to a wall
+    	//b=true means a right wall
+    	//b=false means checking for a wall to the south of our sqr
           Square s = getSquareAt(r, c);
-          if (s.adjacentUp == null && r>0) {
-                Square square = getSquareAt(r-1, c);
-                if (square.adjacentDown == null)
-                      return true;
-          } else if (s.adjacentDown == null && r<8) {
-                 Square square = getSquareAt(r+1, c);
-                 if (square.adjacentUp == null)
-                       return true;
-          } else if (s.adjacentLeft == null && c>0) {
-                Square square = getSquareAt(r, c-1);
-                if (square.adjacentRight == null)
-                      return true;
-          } else if (s.adjacentRight == null && c<8) {
-                Square square = getSquareAt(r, c+1);
-                if (square.adjacentLeft == null)
-                      return true;
+          if(b && s.adjacentRight ==null){
+          return true;
+          }
+          if(!b && s.adjacentDown==null){
+        	  return true;
           }
           return false;
     }

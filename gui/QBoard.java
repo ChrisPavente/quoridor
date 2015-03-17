@@ -177,6 +177,7 @@ public class QBoard extends JFrame implements ActionListener {
 		return "ERROR";
 	}
 	
+	//Currently takes the load off the actionlistener, it handles making moves so all our code isnt in that method
 	public void makeMove(String a,String b){
 		if(a.equals(b)){
 			//movement of character
@@ -189,6 +190,7 @@ public class QBoard extends JFrame implements ActionListener {
 				}
 			}
 			else{
+				//make it so we can remove player to be added
 				setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
 				return;
 			}
@@ -218,14 +220,14 @@ public class QBoard extends JFrame implements ActionListener {
 				return;
 			}
 		}
-		System.out.println(("Player " + board.getCurrent() + "'s turn"));
+		this.setTitle(("Player " + board.getCurrent() + "'s turn"));
 		
 		
 	}
 	
 	
 	public void actionPerformed(ActionEvent action){
-	
+
 		String move = ((JButton) action.getSource()).getName();
 		if(moveStack.isEmpty()){
 			moveStack.push(move);

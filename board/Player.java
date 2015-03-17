@@ -54,7 +54,7 @@ public class Player{
 		if(num==1 && square.getRow()==0){
 			return true;
 		}
-		//We dont have more players yet 
+		//We dont have more players yet so it would be silly to add more win conditions yet
 		return false;
 	}
 	
