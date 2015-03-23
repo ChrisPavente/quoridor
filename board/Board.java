@@ -181,8 +181,7 @@ public class Board {
 		return players;
 	}
 
-
-	/**
+/**
 	 * Allows the user to make a move on the board object.
 	 * 
 	 * @param s: string for character move or wall placement
@@ -190,6 +189,7 @@ public class Board {
 	 * 			 for wall placement it is of the form: [rowLetter]-[columnRomanNumeral]_[rowLetter]-[columnRomanNumeral] Example: A-V_A-VI
 	 * @return false if the move was not legal, otherwise return true.
 	 */
+
 	public boolean makeMove(String s){
         boolean isLegal = false;
         if (s.contains("_")) {
@@ -210,7 +210,8 @@ public class Board {
               int c = converColToInt(s.substring(2));
               isLegal = checkIfLegalPlayerMove(r, c, current);
               if (!(isLegal))
-                 return isLegal;
+              		if (!(checkIfLegalJumpMove(r, c, current)))
+                 		return isLegal;
               players.get(current).move(getSquareAt(r, c));
         }
         //add the method call here to print the board to view board
@@ -219,7 +220,106 @@ public class Board {
         }
         return isLegal;
 	}
+		  /**
+	       * Allows the user to make a move on the board object.
+	       * 
+	       * @param r: row number
+	       * @param c: column number
+	       * @param p; player number that wants to make the jump
+	       * @return true if the jump move is legal
+	       */
+	 	 public boolean checkIfLegalJumpMove(int r, int c, int p) {
+    	 if (r>8 || r<0 || c>8 || c<0)
+                return false;
+         //if (checkIfWallIsThere(r, c))
+         //       return false;
+         if (checkIfPlayerIsThere(r, c))
+                return false;
+         Square s = getSquareAt(r, c);
+          List<Player> playerList = new ArrayList<Player>();
+          playerList.addAll(players);
+         Square pS = playerList.get(p).getSquare();
+         int i =0;
 
+         while (i < playerList.size()) {
+         		Square sq = playerList.get(i).getSquare();
+         		if (s.equals(pS))
+         			return true;
+         		//if (s.equals(sq))
+         		//	continue;
+         		if (s.adjacentUp != null && s.adjacentUp.equals(sq)) {
+         			System.out.println("AdjacentUp");
+         			if (eliminate(pS, s, s.adjacentUp)) {
+         			    playerList.remove(i);
+         			    continue;
+         			}
+         			System.out.println("AdjacentUp Cont");
+         			s = s.adjacentUp;
+         			playerList.remove(i);
+         			i =0;
+         			continue;
+                } else if (s.adjacentDown != null && s.adjacentDown.equals(sq)) {
+         			if (eliminate(pS, s, s.adjacentDown)) {
+         			    playerList.remove(i);
+         			    continue;
+         			}
+         			s = s.adjacentDown;
+         			playerList.remove(i);
+         			i =0;
+         			continue;
+         		} else if (s.adjacentLeft != null && s.adjacentLeft.equals(sq)) {
+         			if (eliminate(pS, s, s.adjacentLeft)) {
+         			    playerList.remove(i);
+         			    continue;
+         			}
+         			s = s.adjacentLeft;
+         			playerList.remove(i);
+         			i =0;
+         			continue;
+         		} else if (s.adjacentRight != null && s.adjacentRight.equals(sq)) {
+         			if (eliminate(pS, s, s.adjacentRight)) {
+         			    playerList.remove(i);
+         			    continue;
+         			}
+         			s = s.adjacentRight;
+         			playerList.remove(i);
+         			i =0;
+         			continue;
+         		} 			
+         		i++;
+         }
+         if (s.equals(pS))
+       	     return true;
+         return false;
+    }
+
+    //Return true will lead to a remove
+    /**
+	 * Checks to see if a player needs to be eliminated
+	 * 
+	 * @param pS: Square of player that wants to make the jump  
+	 * @param s: Current square that is being checked		 
+	 * @param sq: The adjacent of s
+	 * @return true if a player needs to be eliminated, false otherwise
+	 */
+    private boolean eliminate(Square pS, Square s, Square sq) {
+    	int sRow = s.getRow();
+    	int sCol = s.getColumn();
+    	int pSRow = pS.getRow();
+    	int pSCol = pS.getColumn();
+    	int sqRow = sq.getRow();
+    	int sqCol = sq.getColumn();
+    	if (sCol == pSCol) {
+    	    if (Math.abs(pSRow-sqRow) > Math.abs(pSRow-sRow)) {
+    	    	return true;
+    	    }
+		} else if (sRow == pSRow) {
+			if (Math.abs(pSCol-sqCol) > Math.abs(pSCol-sCol)) {
+				return true;
+			}
+		}
+		return false;
+    }
 
 	/**
 	 * Method converts the row character to its equivalent row int (0-8)
