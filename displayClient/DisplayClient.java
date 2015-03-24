@@ -5,13 +5,16 @@ Display Client
 import java.io.*;
 import java.net.Socket;
 
+import board.Board;
+
 //  Create display client
 public class DisplayClient{
     public static void main(String[] args){
-        String[] testNames = {"Dog:1234", "Cat:2345", "Walrus:4321", "Monkey:9876"};
-        //DisplayClient client = new DisplayClient(args);
+        //String[] testNames = {"Dog:1234", "Cat:2345", "Walrus:4321", "Monkey:9876"};
+        
         try {
-            DisplayClient client = new DisplayClient(testNames);
+	    DisplayClient client = new DisplayClient(args);
+            //DisplayClient client = new DisplayClient(testNames);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -20,6 +23,7 @@ public class DisplayClient{
 //------------------------------------------------------------------------------------------
 
     private int numOfPlayers;
+    private String[] hostNames;
     private String[] playerIDs;
     private int[] playerPorts;
     private Socket[] sockets;
@@ -28,12 +32,20 @@ public class DisplayClient{
     private boolean victor = false;
 
     public DisplayClient(String[] players) throws Exception{
-        //  Set up player and sockets
-        playerSetUp(players);
+	
+
+        //  Set up player, board, and sockets
+        SetUp(players);
         socketSetUp();
 
+        //  Wait for all move servers to respond and set playerIDs	
+	for(i=0; i<numOfPlayers; i++){
+	    playerIDs[i] = input[i].readLine();
+	    playerIDs[i] = playerIDs[i].substring(playerIDs[i].indexOf(' ');
+	}
+
+	//  Send Player message to all players
         sendPlayerMessage();
-        //  Wait for all move servers to respond
 
         //  Play round till there is a victor
         while (!victor){
@@ -43,7 +55,7 @@ public class DisplayClient{
     }
 
     //  Adds players info to lists
-    public void playerSetUp(String[] players){
+    public void SetUp(String[] players){
         //  Set numOfPlayers if valid
         if(players.length == 2){
             numOfPlayers = 2;
@@ -55,7 +67,11 @@ public class DisplayClient{
             System.out.println("Invalid number of players.");
         }
 
+	//  Create board
+	Board board = new Board(numOfPlayers);
+
         //  Create arrays of appropriate size
+	hostNames = new String[numOfPlayers];
         playerIDs = new String[numOfPlayers];
         playerPorts = new int[numOfPlayers];
         sockets = new Socket[numOfPlayers];
@@ -64,7 +80,7 @@ public class DisplayClient{
 
         // Split up input strings into appropriate lists
         for(int i = 0; i < players.length; i++) {
-            playerIDs[i] = players[i].substring(0, players[i].indexOf(":"));
+            hostNames[i] = players[i].substring(0, players[i].indexOf(":"));
             playerPorts[i] = Integer.parseInt(players[i].substring(players[i].indexOf(":")+1));
             System.out.println(playerIDs[i] + playerPorts[i]);
         }
@@ -73,7 +89,7 @@ public class DisplayClient{
     //  Create sockets and input/outputs
     public void socketSetUp() throws Exception{
         for(int i = 0;i < numOfPlayers; i++){
-            sockets[i] = new Socket(playerIDs[i], playerPorts[i]);
+            sockets[i] = new Socket(hostNames[i], playerPorts[i]);
             input[i] = new BufferedReader(new InputStreamReader(sockets[i].getInputStream()));
             output[i] = new PrintWriter(sockets[i].getOutputStream(), true);
         }
@@ -103,20 +119,31 @@ public class DisplayClient{
         // Cycle through each player
         for (int i = 0; i < numOfPlayers; i++){
             if(playerIDs[i] != null) {
+		// Change current Player
+		board.changeCurrentPlayer(i+1);		
+	
                 //  Send initial GO? message to ask for move
                 sendGoMessage(i);
 
                 //  Receive move from socket
-                String move = input[i].readLine();
+		move = null;
+		while(move = null){
+                	String move = input[i].readLine();
+		}	
+		move = move.substring(move.indexOf(' '));
 
                 //  Check if legal and boot player if not
                 if (!checkIfLegal(i, move)) {
                     sendBootMessage(i);
                     playerIDs[i] = null;
-                }
+                }else{
 
-                // Send Went message to all players
-                sendWentMessage(i, move);
+		    // Send move to board
+		    board.makeMove(move);
+
+                    // Send Went message to all players
+                    sendWentMessage(i, move);
+		}
 
                 //  Check for victor
                 if (checkIfVictor()) {
