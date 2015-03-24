@@ -107,7 +107,7 @@ public class Quoridor extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent action) {
 		if (buttons.get(0) == action.getSource()) {
-			Board newGame = new Board(2);
+			QBoard newGame = new QBoard(2);
 		}
 		
 		if (buttons.get(1) == action.getSource()) {

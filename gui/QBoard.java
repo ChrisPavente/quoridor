@@ -182,7 +182,7 @@ public class QBoard extends JFrame implements ActionListener {
 			return "IX";
 		return "ERROR";
 	}
-	
+	//These fields are currently here as our network isn't hooked up so something needs to keep track of the game
 	private int current =0;
 	private int kickedPlayers=0;
 	//Currently takes the load off the actionlistener, it handles making moves so all our code isnt in that method

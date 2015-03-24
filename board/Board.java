@@ -87,32 +87,31 @@ public class Board {
 	 * @return true: if the wall has been placed in the desired location, false
 	 * 			     otherwise.
 	 */
-	public boolean placeWall(int i,int j, int a, int b){
-		if((i==0 && a==0)|| (j==0 && b==0) || (i==8 && a==8) || (j==8 && b==8)){
+	private boolean placeWall(int x1,int y1, int x2, int y2){
+		if((x1==0 && x2==0)|| (y1==0 && y2==0) || (x1==8 && x2==8) || (y1==8 && y2==8)){
 			return false;
 		}
-		if(Math.abs(i-a)*Math.abs(i-a)+Math.abs(j-b)*Math.abs(j-b)>1){
+		if(Math.abs(x1-x2)*Math.abs(x1-x2)+Math.abs(y1-y2)*Math.abs(y1-y2)>1){
 			return false;
 		}
 		boolean check = false;
-		if(Math.abs(i-a)==1){
+		if(Math.abs(x1-x2)==1){
 			//The wall is horizontal
-			Square s =  grid[i][j];
-			check = s.breakLink(grid[i][j+1]);
+			Square s1 =  grid[x1][y1];
+			Square s2 = grid[x2][y2];
+			check = s1.breakLink(grid[x1][y1+1]) && s2.breakLink(grid[x2][y2+1]);
 			if(!check){
-				return check;
+				unDoPlaceWall(x2,y2,true);
 			}
-			s = grid[a][b];
-			check = check && s.breakLink(grid[a][b+1]);
+			
 		}
-		if(Math.abs(j-b)==1){
-			Square s =  grid[i][j];
-			check = s.breakLink(grid[i+1][j]);
+		else if(Math.abs(y1-y2)==1){
+			Square s1 =  grid[x1][y1];
+			Square s2 = grid[x2][y2];
+			check = s1.breakLink(grid[x1+1][y1]) && s2.breakLink(grid[x2+1][y2]);
 			if(!check){
-				return check;
+				unDoPlaceWall(x2,y2,false);
 			}
-			s = grid[a][b];
-			check = check && s.breakLink(grid[a+1][b]);
 		}
 		
 		return check;
@@ -125,24 +124,19 @@ public class Board {
 	 * Note: We assume a place wall has already been called and this technique is also
 	 * very slow.  
 	 * 
-	 * @param i
+	 * @param i 
 	 * @param j
 	 * @param a
 	 * @param b
 	 */
-	public void unDoPlaceWall(int i,int j, int a, int b){
-		if(Math.abs(i-a)==1){
-			//The wall is horizontal
-			Square s =  grid[i][j];
-			s.reLink(grid[i][j+1], 2);
-			s = grid[a][b];
-			s.reLink(grid[a][b+1],2);
+	private void unDoPlaceWall(int i,int j, boolean direction){
+		if(direction){
+			Square s= this.getSquareAt(i, j);
+			s.reLink(this.getSquareAt(i+1, j), 1);
 		}
-		if(Math.abs(j-b)==1){
-			Square s =  grid[i][j];
-			s.reLink(grid[i+1][j],1);
-			s = grid[a][b];
-			s.reLink(grid[a+1][b],1);
+		else{
+			Square s= this.getSquareAt(i, j);
+			s.reLink(this.getSquareAt(i, j+1), 2);
 		}
 	}
 	
@@ -260,7 +254,7 @@ public class Board {
     *
     */
     private boolean recursiveJumpCheck(Square cur,Square goal,int tally){
-        if(tally==0){
+        if(tally<0){
             return false;
         }
     	if (cur.adjacentUp != null && cur.adjacentUp.equals(goal))
@@ -272,9 +266,10 @@ public class Board {
        if (cur.adjacentRight != null && cur.adjacentRight.equals(goal))
              return true;
        boolean b = false;
+       tally = tally-1;
        for(int i=0;i<4;i++){
      	  if(checkIfPlayerIsThere(cur.getNeighbour(i))){
-     		  b = b ||recursiveJumpCheck(cur.getNeighbour(i),goal,tally--);
+     		  b = b ||recursiveJumpCheck(cur.getNeighbour(i),goal,tally);
      	  }
        }
        return b;
@@ -389,6 +384,7 @@ public class Board {
 		System.out.println(board.toString());
 	}
 
+	//Returns the Winner of the game
 	public Player isWinner(int kickedPlayers){
 		//Called after a move is made to see if that player won
 		for(Player p: players){
