@@ -39,9 +39,9 @@ public class DisplayClient{
         socketSetUp();
 
         //  Wait for all move servers to respond and set playerIDs	
-	for(i=0; i<numOfPlayers; i++){
+	for(int i=0; i<numOfPlayers; i++){
 	    playerIDs[i] = input[i].readLine();
-	    playerIDs[i] = playerIDs[i].substring(playerIDs[i].indexOf(' ');
+	    playerIDs[i] = playerIDs[i].substring(playerIDs[i].indexOf(' '));
 	}
 
 	//  Send Player message to all players
@@ -126,9 +126,9 @@ public class DisplayClient{
                 sendGoMessage(i);
 
                 //  Receive move from socket
-		move = null;
-		while(move = null){
-                	String move = input[i].readLine();
+		String move = null;
+		while(move == null){
+                	move = input[i].readLine();
 		}	
 		move = move.substring(move.indexOf(' '));
 
