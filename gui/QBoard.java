@@ -5,12 +5,14 @@ import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import board.Board;
 import board.Player;
+import board.Square;
 
 public class QBoard extends JFrame implements ActionListener {
 
@@ -33,10 +35,14 @@ public class QBoard extends JFrame implements ActionListener {
 	 * buttons for the vertical and horizontal walls.
 	 * @param b: The board object that gets passed to the board created.
 	 */
-	public QBoard(Board b) {
+	public QBoard(int num) {
 		super();
-		board = b;
+		board = new Board(num);
 		initialize();
+		for(Player p:board.getPlayers()){
+			Square s = p.getSquare();
+			this.setColorOfSpace(s.getRow(),s.getColumn(), p.getColor());
+		}
 	}
 	
 	/**
@@ -177,28 +183,31 @@ public class QBoard extends JFrame implements ActionListener {
 		return "ERROR";
 	}
 	
+	private int current =0;
+	private int kickedPlayers=0;
 	//Currently takes the load off the actionlistener, it handles making moves so all our code isnt in that method
 	public void makeMove(String a,String b){
 		if(a.equals(b)){
 			//movement of character
-			Player temp =board.getPlayers().get(board.getCurrent());
+			Player temp =board.getPlayers().get(current);
 			setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),Color.black);
-			if(board.makeMove(a)){
-				if(board.isWinner()!=null){
-					System.out.println(board.getCurrent()-1);
-					System.exit(0);
-				}
+			if(board.makeMove(a,current)){
+				current++;
+				setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
 			}
 			else{
+				board.getPlayers().get(current).removePlayer();
 				//make it so we can remove player to be added
-				setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
-				return;
+				//setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
+				current++;
+				kickedPlayers++;
 			}
-			setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
+
 		}
 		else{
 			//must be trying to place a wall
-			if(board.makeMove(a+"_"+b)){
+			Square temp = board.getPlayers().get(current).getSquare();
+			if(board.makeMove(a+"_"+b,current)){
 			int i = board.convertRowToInt(a.charAt(0));
 			int j = board.converColToInt(a.substring(2));
 			int k = board.convertRowToInt(b.charAt(0));
@@ -208,34 +217,54 @@ public class QBoard extends JFrame implements ActionListener {
 				System.out.println("A Wall was placed");
 				vertWalls[j][i].setVisible(true);
 				vertWalls[l][k].setVisible(true);
+				current++;
 			}
 			else if(j !=l){
 				System.out.println("A Wall was placed");
 				horWalls[j][i].setVisible(true);
 				horWalls[l][k].setVisible(true);
+				current++;
 			}
 			}
 			else{
+				setColorOfSpace(temp.getRow(),temp.getColumn(),Color.black);
 				System.out.println("CANT PLACE WALL");
-				return;
+				board.getPlayers().get(current).removePlayer();
+				current++;
+				kickedPlayers++;
+				
 			}
 		}
-		this.setTitle(("Player " + board.getCurrent() + "'s turn"));
+		ArrayList<Player>playa = (ArrayList<Player>) board.getPlayers();
+		int size = playa.size();
+		current = current%size;
+		while(!playa.get(current).isActive()){
+			current++;
+			current %=size;
+		}
+		if(board.isWinner(kickedPlayers)!=null){
+			System.out.println("We have a winner!!");
+			this.dispose();
+			System.exit(0);
+		}
+		
+		this.setTitle(("Player " + current + "'s turn"));
 		
 		
 	}
 	
 	
 	public void actionPerformed(ActionEvent action){
-
+		System.out.println(current);
 		String move = ((JButton) action.getSource()).getName();
 		if(moveStack.isEmpty()){
 			moveStack.push(move);
 		}
 		else{
+			//Send Move to be called here:Currently calls makeMove as the game is Local
 			makeMove(moveStack.pop(),move);
 		}
-	
+		
 		
 		//System.out.println(board.makeMove(move, board.getCurrent()));
 		
@@ -263,7 +292,6 @@ public class QBoard extends JFrame implements ActionListener {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Board board = new Board(2);
-		//new QBoard(board);
+		new QBoard(4);
 	}
 }

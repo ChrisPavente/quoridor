@@ -18,8 +18,8 @@ public class Player{
 	private int walls;
 	private String oldShortestPath;//Keeps a representation of the shortest path
 									//We hold on to this, because in some cases the shortest path hasn't changed so we can use our old path
-
-	public final static Color[] color = {Color.yellow, Color.green, Color.blue, Color.red};
+	private boolean inGame;
+	private final static Color[] color = {Color.yellow, Color.green, Color.blue, Color.red};
 	private Color col;
 
 	/**
@@ -35,6 +35,7 @@ public class Player{
 		this.num =num;
 		this.square = s;
 		this.walls=walls;
+		inGame = true;
 		setDefaultColor();
 	}	
 	
@@ -70,8 +71,9 @@ public class Player{
 	 * Method to decrement the number of walls the player has.  Used after
 	 * the player uses one of their walls.
 	 */
-	public void useWall(){
+	public boolean useWall(){
 		walls--;
+		return true;
 	}
 	
 	
@@ -82,8 +84,9 @@ public class Player{
 	 * will check legality)
 	 * @param s the square to move the player to
 	 */
-	public void move(Square s) {
-		square = s;
+	public boolean move(Square s) {
+		square = s; 
+		return true;
 	} 
 	
 	/**
@@ -117,6 +120,18 @@ public class Player{
 		return col;
 	}
 
+	public boolean isActive(){
+		return inGame;
+	}
+	
+	/**
+	 * Remove the player who calls this method from the game
+	 * PostCondition: The player has no reference to a square anymore. They are effectively out of the game
+	 */
+	public void removePlayer(){
+		square = null;
+		inGame = false;
+	}
 
 	
 } 
