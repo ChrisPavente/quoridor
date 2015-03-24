@@ -538,9 +538,5 @@ public class Board {
 		}
 		return null;
 	}
-	
-	public void changeCurrentPlayer(int i){
-		current = int i;	
-	}
 
 }
