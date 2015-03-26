@@ -9,15 +9,13 @@ import board.Board;
 class testServ extends Thread {
     
 
-    //number of clients
-    private static int nclient = 0;
     //Server port
     private static int defaultPort;
     //server will use this socket
     private Socket s = null;
     private static String serverName;
     private Scanner parser;
-    private Board locBoard = new Board(2); //Change later
+    private Board locBoard;
     
 
     public testServ(Socket s) {
@@ -42,8 +40,6 @@ class testServ extends Thread {
     //Will run the main game loop and message passing
 
     public void run() {
-    	nclient++;
-    	//ystem.out.println("Starting thread #" + nclient);
     	boolean victor = false;
     	
 	
@@ -53,15 +49,17 @@ class testServ extends Thread {
 	    PrintStream out = new PrintStream(s.getOutputStream());
 	    
 	    //Sends the servers AI identifier
-	    //out.println("MOVE-SERVER "+ serverName);     TO BE EDITED FOR PROTOCOL
-	    out.println(serverName + ":" + defaultPort);
+	    out.println("MOVE-SERVER "+ serverName);
 	    System.out.println("Sending name");
 	    //Recieves the players to signal the start of the game
 	    parser = new Scanner(in.readLine());
 	    String playerList[] = new String[2];
+	    parser.next(); // removing the "Playerlist" string
 	    for (int i = 0; i < 2; i++) {
 	    	playerList[i] = parser.next();
+	    		
 	    }
+	    locBoard = new Board(playerList.length);
 	    	
 	    
 	    
@@ -80,16 +78,17 @@ class testServ extends Thread {
 					 * out.println("GO" + board.makeMove());
 					*/
 					String move = go();
-					locBoard.makeMove(move, 1);
-					out.println("GO" + move);
+					out.println("GO " + move);
 					
 					break;
 				case "WENT": 
 					System.out.println("WENT");
-					//while (parser.hasNext()) {
-						//System.out.println(parser.next());
-					//}
-
+					for (int i = 0; i < playerList.length; i++) {
+						if (parser.next().equals(playerList[i]))
+							locBoard.makeMove(parser.next(), i);
+					}
+					
+					
 					/*WENT method here
 					 * INPUT: WENT <player-id> <move-string>
 					 * Will be recieved each turn by every player
@@ -123,13 +122,12 @@ class testServ extends Thread {
 			
 		} while (!victor);
 		
-    	s.close();
+		s.close();
 
-	}catch (Exception e) {
+	}	catch (Exception e) {
 	    System.err.println(e);
 	    System.exit(1);
 	}
-    
 
     }
 
