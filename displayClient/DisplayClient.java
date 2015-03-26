@@ -30,13 +30,15 @@ public class DisplayClient{
     private BufferedReader[] input;
     private PrintWriter[] output;
     private boolean victor = false;
+    private Board board;
 
     public DisplayClient(String[] players) throws Exception{
 	
 
-        //  Set up player, board, and sockets
+        //  Set up player and sockets
         SetUp(players);
         socketSetUp();
+	
 
         //  Wait for all move servers to respond and set playerIDs	
 	for(int i=0; i<numOfPlayers; i++){
@@ -68,7 +70,7 @@ public class DisplayClient{
         }
 
 	//  Create board
-	Board board = new Board(numOfPlayers);
+	board = new Board(numOfPlayers);
 
         //  Create arrays of appropriate size
 	hostNames = new String[numOfPlayers];
@@ -118,17 +120,17 @@ public class DisplayClient{
     public void playRound() throws Exception{
         // Cycle through each player
         for (int i = 0; i < numOfPlayers; i++){
+	    //  Change To correct players turn
+	    i = convertPlayerNum(i);
+
             if(playerIDs[i] != null) {
-		// Change current Player
-		board.changeCurrentPlayer(i+1);		
-	
                 //  Send initial GO? message to ask for move
                 sendGoMessage(i);
 
                 //  Receive move from socket
 		String move = null;
 		while(move == null){
-                	move = input[i].readLine();
+                    move = input[i].readLine();
 		}	
 		move = move.substring(move.indexOf(' '));
 
@@ -139,7 +141,7 @@ public class DisplayClient{
                 }else{
 
 		    // Send move to board
-		    board.makeMove(move);
+		    board.makeMove(move, i);
 
                     // Send Went message to all players
                     sendWentMessage(i, move);
@@ -182,5 +184,19 @@ public class DisplayClient{
     //  Sends VICTOR message to all move servers
     public void sendVictorMessage(int playerOffset){
         sendMessageToAll("VICTOR " + playerIDs[playerOffset]);
+    }
+	
+    //  Convert player number to use with board class
+    public int convertPlayerNum(int i){
+	switch(i){
+	    case 0:
+	    	return 0;
+	    case 1:
+		return 3;
+	    case 2:
+		return 1;
+	    case 3: 
+		return 2;
+	}
     }
 }
