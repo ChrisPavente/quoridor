@@ -2,6 +2,8 @@
 import java.io.*;
 import java.util.*;
 import java.net.*;
+import board.Board;
+
 
 
 class testServ extends Thread {
@@ -15,6 +17,7 @@ class testServ extends Thread {
     private Socket s = null;
     private static String serverName;
     private Scanner parser;
+    private Board locBoard = new Board(2); //Change later
     
 
     public testServ(Socket s) {
@@ -40,7 +43,7 @@ class testServ extends Thread {
 
     public void run() {
     	nclient++;
-    	System.out.println("Starting thread #" + nclient);
+    	//ystem.out.println("Starting thread #" + nclient);
     	boolean victor = false;
     	
 	
@@ -50,15 +53,22 @@ class testServ extends Thread {
 	    PrintStream out = new PrintStream(s.getOutputStream());
 	    
 	    //Sends the servers AI identifier
-	    out.println("MOVE-SERVER "+ serverName);
-	    
+	    //out.println("MOVE-SERVER "+ serverName);     TO BE EDITED FOR PROTOCOL
+	    out.println(serverName + ":" + defaultPort);
+	    System.out.println("Sending name");
 	    //Recieves the players to signal the start of the game
-	    //will eventually implement a timeout, needs to test for illegal strings
-	    String playerList = in.readLine();
+	    parser = new Scanner(in.readLine());
+	    String playerList[] = new String[2];
+	    for (int i = 0; i < 2; i++) {
+	    	playerList[i] = parser.next();
+	    }
+	    	
+	    
+	    
+	    //System.out.println("Retrieved playerlist" + playerList);
 	    
 	    //Game loop
 		do {
-			System.out.println("In the DO");
 			parser = new Scanner(in.readLine());
 			String message = parser.next();
 			//System.out.println(message);
@@ -67,14 +77,18 @@ class testServ extends Thread {
 					System.out.println("GO?");
 					/*Place the GO method here
 					 * this method will calculate a move and send back
-					 * out.println("GO" + <move-string>);
+					 * out.println("GO" + board.makeMove());
 					*/
+					String move = go();
+					locBoard.makeMove(move, 1);
+					out.println("GO" + move);
+					
 					break;
 				case "WENT": 
 					System.out.println("WENT");
-					while (parser.hasNext()) {
-						System.out.println(parser.next());
-					}
+					//while (parser.hasNext()) {
+						//System.out.println(parser.next());
+					//}
 
 					/*WENT method here
 					 * INPUT: WENT <player-id> <move-string>
@@ -129,15 +143,18 @@ class testServ extends Thread {
     	} else
     		throw new Exception("Incorrect syntax. Requires port number, then player id");
     	
-	try {
-	    startServ(defaultPort);
-	} catch (Exception e) {
-	    System.err.println(e);
-	    System.exit(2);
-	}
+    	try {
+    		startServ(defaultPort);
+    	} catch (Exception e) {
+    		System.err.println(e);
+    		System.exit(2);
+    	}
     }
 
-
+    public String go() {
+    	System.out.println("Enter a move: ");
+    	return System.in;
+    }
 
 
 
