@@ -68,7 +68,7 @@ public class DisplayClient{
         else{
             System.out.println("Invalid number of players.");
         }
-
+.
 	//  Create board
 	board = new Board(numOfPlayers);
 
@@ -197,6 +197,8 @@ public class DisplayClient{
 		return 1;
 	    case 3: 
 		return 2;
+	    default:
+		return null;
 	}
     }
 }
