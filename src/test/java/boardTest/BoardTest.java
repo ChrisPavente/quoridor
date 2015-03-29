@@ -30,8 +30,17 @@ public class BoardTest {
 		assert(board.makeMove("F-VII_G-VII", 3));
 		assert(board.getPlayers().get(3).isActive());
 		
-		//String move = "Down";
 		
+	}
+	
+	@Test
+	public void testRemovalFromBoard(){
+		Board board = new Board(4);
+		if(!board.makeMove("H-V", 0)){
+			board.getPlayers().get(0).removePlayer();
+		}
+		assertEquals("Player 0 should not be in the game",board.getPlayers().get(0).isActive(),false);
+		assertEquals("Player 0 should not have a reference to a square object",board.getPlayers().get(0).getSquare(),null);
 	}
 	
 	@Test
@@ -39,16 +48,7 @@ public class BoardTest {
 		Board board = new Board(2);
 		assert(board.makeMove("F-III_G-III", 0));
 		assertEquals("Player 0 should have one less wall",board.getPlayers().get(0).getWallNum(),9);
-		//board.placeWall(2,2,2,3);
-		//Square s = board.getSquareAt(2,2);
-		//assertEquals("s's adjacent down should be null",s.getNeighbour(2),null);
-		//System.out.println(s);
-		//boolean b = board.placeWall(2, 2,2,3);
-		//assertEquals("After trying to place another wall, we should have a problem",b,false);
-		//board.unDoPlaceWall(2, 2, 2, 3);
-		//Square a = board.getSquareAt(2,2);
-		//System.out.println(a);
-		//assert(a!=s);
+		
 	}
 	
 
@@ -56,7 +56,9 @@ public class BoardTest {
 	public void testPlayerCreation(){
 		Board board = new Board(2);
 		List<Player> p = board.getPlayers();
-		//assertEquals("p1 should be at square [0][4]", p.get(0).getSquare() , board.getSquareAt(0, 4));
+		assertEquals("The player list should be of size 2",2,p.size());
+		assertEquals("Player 0 should have 10 walls!",10,p.get(0).getWallNum());
+
 	}
 	
 	@Test
