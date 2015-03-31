@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="boardTest.PlayerTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2015-03-29T18:31:26" hostname="marcy" time="0.0010">
+  <properties/>
+  <testcase name="testMove" classname="boardTest.PlayerTest" time="0.0"/>
+  <testcase name="testWallUse" classname="boardTest.PlayerTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
