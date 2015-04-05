@@ -16,6 +16,7 @@ class moveServer extends Thread {
     private static String serverName;
     private Scanner parser;
     private Board locBoard;
+    private String [] playerList;
     
 
     public moveServer(Socket s) {
@@ -44,28 +45,20 @@ class moveServer extends Thread {
     	boolean victor = false;
 
 
-	
 	try {
-		
+		//Creates the Input/Output Streams for server/client communication
 	    BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 	    PrintStream out = new PrintStream(s.getOutputStream());
-	    
 	    //Sends the servers AI identifier
 	    out.println("MOVE-SERVER "+ serverName);
-	    System.out.println("Sending name");
+	    System.out.println("Sending player name..");
 	    //Receives the players to signal the start of the game
 	    parser = new Scanner(in.readLine());
-	    String playerList[] = new String[2];
-	    parser.next(); // removing the "Playerlist" string
-	    for (int i = 0; i < 2; i++) {
-	    	playerList[i] = parser.next();
-	    		
-	    }
+	    playerList = genPList(parser);
 	    locBoard = new Board(playerList.length);
 	    	
 	    
 	    
-	    //System.out.println("Retrieved playerlist" + playerList);
 	    
 	    //Game loop
 		do {
@@ -152,20 +145,45 @@ class moveServer extends Thread {
     		System.exit(2);
     	}
     }
-
+    
+    //Currently prompts the user for a input on the board
     public String go() {
-    	System.out.print("Enter a move: ");
+    	System.out.print(serverName + ", please enter a move: ");
     	parser = new Scanner(System.in);
     	return parser.next();
     	
     }
 
-
+    
     private int findPlayerId(String player, String[] playerList){
         for(int i = 0; i< playerList.length; i++)
             if (playerList[i] == player)
                 return i;
         return 0;
+    }
+    
+   
+    /* Generates the playerList array with a now variable amount of players,
+     * uses a temporary array with a size of 4 to take into account a 4 player game
+	 * Input: Takes the parser which contains the playerlist received from the client
+    */
+    private String[] genPList(Scanner parser) {
+    	parser.next(); // removing the "Playerlist" string
+	    
+	    String tmp[] = new String[4];
+	    
+	    int i = 0;
+	    while (parser.hasNext()){
+	    	tmp[i] = parser.next();
+	    	i++;
+	    }
+	    String pList [] = new String[i];
+	    for (int j = 0; j < i; j++) {
+	    	pList[j] = tmp[j];
+	    }
+	    
+	    return pList;
+	    
     }
 
 
