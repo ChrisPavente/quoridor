@@ -18,7 +18,7 @@ class moveServer extends Thread {
     private Board locBoard;
     
 
-    public testServ(Socket s) {
+    public moveServer(Socket s) {
     	this.s = s;
     }
 
@@ -31,7 +31,7 @@ class moveServer extends Thread {
     		System.out.println("Starting new server");
             System.out.println();
             Socket s = svr.accept();
-    		new testServ(s).start();
+    		new moveServer(s).start();
     	}
 
     }
