@@ -11,7 +11,7 @@ class moveServer extends Thread {
 
     //Server port
     private static int defaultPort;
-    //server will use this socket
+    //Server will use this socket
     private Socket s = null;
     private static String serverName;
     private Scanner parser;
@@ -38,9 +38,12 @@ class moveServer extends Thread {
     }
 
 
-    //input: client socket
-    //Will run the main game loop and message passing
+    
 
+    /* 
+     * Runs the main game loop for the server,
+     * handles all the network protocols.
+     */
     public void run() {
     	boolean victor = false;
 
@@ -84,9 +87,7 @@ class moveServer extends Thread {
                     //locBoard.makeMove(moveString, findPlayerId(player, playerList));
                     System.out.println("WENT " + player + " " + moveString);
 						
-					
-					
-					/*WENT method here
+					/*WENT 
 					 * INPUT: WENT <player-id> <move-string>
 					 * Will be recieved each turn by every player
 					 * will update the board based upon a players move
@@ -94,6 +95,9 @@ class moveServer extends Thread {
 					break;
 				case "BOOT": 
 					System.out.println("BOOT");
+					//parser.next();
+					//Call the board's player remove
+					//If it is this player being removed, s.close();
 					/* BOOT method here
 					 * INPUT BOOT <player-id>
 					 * removes the booted players pawns from the game board
@@ -102,6 +106,8 @@ class moveServer extends Thread {
 					break;
 				case "VICTOR": 
 					System.out.println("VICTOR");
+					
+					//Match the victor's name with this server's name
 					victor = true;
 					/*VICTOR method
 					 * input: VICTOR <player-id>
@@ -133,10 +139,10 @@ class moveServer extends Thread {
     public static void main (String [] args) throws Exception {
     	
     	if(args.length > 0) {
-    	defaultPort = Integer.parseInt(args[0]);
-    	serverName = args[1];
+    		defaultPort = Integer.parseInt(args[1]);
+    		serverName = args[0];
     	} else
-    		throw new Exception("Incorrect syntax. Requires port number, then player id");
+    		throw new Exception("Incorrect syntax. Requires the player ID, then port number");
     	
     	try {
     		startServ(defaultPort);
@@ -146,7 +152,11 @@ class moveServer extends Thread {
     	}
     }
     
-    //Currently prompts the user for a input on the board
+    /**
+     * Currently prompts the user for a input on the board
+     * 
+     * @return - A string input matches a move to be played.
+     */
     public String go() {
     	System.out.print(serverName + ", please enter a move: ");
     	parser = new Scanner(System.in);
@@ -155,6 +165,14 @@ class moveServer extends Thread {
     }
 
     
+    
+    /**
+     * Finds and matches the player ID in order to correctly update player moves.
+     * 
+     * @param player
+     * @param playerList
+     * @return If 0 it matches this instance of the server if i it is player i's turn.
+     */
     private int findPlayerId(String player, String[] playerList){
         for(int i = 0; i< playerList.length; i++)
             if (playerList[i] == player)
@@ -163,20 +181,24 @@ class moveServer extends Thread {
     }
     
    
-    /* Generates the playerList array with a now variable amount of players,
-     * uses a temporary array with a size of 4 to take into account a 4 player game
-	 * Input: Takes the parser which contains the playerlist received from the client
-    */
+    
+    /**
+     *  Generates the playerList array with a variable amount of players,
+     *  uses a temporary array with a size of 4 to take into account a 4 player game.
+     *  
+     * @param parser - the string parser which contains the playlist string from the client
+     * @return An array containing the players
+     */
     private String[] genPList(Scanner parser) {
     	parser.next(); // removing the "Playerlist" string
-	    
 	    String tmp[] = new String[4];
-	    
 	    int i = 0;
+	    
 	    while (parser.hasNext()){
 	    	tmp[i] = parser.next();
 	    	i++;
 	    }
+	    
 	    String pList [] = new String[i];
 	    for (int j = 0; j < i; j++) {
 	    	pList[j] = tmp[j];
