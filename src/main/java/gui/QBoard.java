@@ -28,21 +28,37 @@ public class QBoard extends JFrame implements ActionListener {
 	
 	private Board board;
 	private Stack<String> moveStack = new Stack<String>();
-	
+
+    private String currentMove;
+    private int playerID;
+
+	private boolean isTurn;
 	/**
 	 * Quoridor Board GUI Constructor.
 	 * Creates a 9x9 grid of buttons to play the game. Also instantiates
 	 * buttons for the vertical and horizontal walls.
 	 * @param b: The board object that gets passed to the board created.
 	 */
-	public QBoard(int num) {
+    public QBoard(int num) {
+        super();
+        board = new Board(num);
+        initialize();
+        for(Player p:board.getPlayers()){
+            Square s = p.getSquare();
+            this.setColorOfSpace(s.getRow(),s.getColumn(), p.getColor());
+        }
+
+    }
+	public QBoard(int num, int ID) {
 		super();
+        playerID = ID;
 		board = new Board(num);
 		initialize();
 		for(Player p:board.getPlayers()){
 			Square s = p.getSquare();
 			this.setColorOfSpace(s.getRow(),s.getColumn(), p.getColor());
 		}
+
 	}
 	
 	/**
@@ -50,7 +66,7 @@ public class QBoard extends JFrame implements ActionListener {
 	 */
 	private void initialize() {
 		setName(BOARD_TITLE);
-		setTitle(BOARD_TITLE);
+		setTitle("Player " + (playerID+1));
 		setSize(345, 369);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
@@ -183,24 +199,25 @@ public class QBoard extends JFrame implements ActionListener {
 		return "ERROR";
 	}
 	//These fields are currently here as our network isn't hooked up so something needs to keep track of the game
-	private int current =0;
+
 	private int kickedPlayers=0;
 	//Currently takes the load off the actionlistener, it handles making moves so all our code isnt in that method
-	public void makeMove(String a,String b){
+
+    public void makeMove(String a,String b, int current){
 		if(a.equals(b)){
 			//movement of character
 			System.out.println(a);
 			Player temp =board.getPlayers().get(current);
 			setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),Color.black);
 			if(board.makeMove(a,current)){
-				current++;
+				
 				setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
 			}
 			else{
 				board.getPlayers().get(current).removePlayer();
 				//make it so we can remove player to be added
 				//setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
-				current++;
+				
 				kickedPlayers++;
 			}
 
@@ -218,20 +235,20 @@ public class QBoard extends JFrame implements ActionListener {
 				System.out.println("A Wall was placed");
 				vertWalls[j][i].setVisible(true);
 				vertWalls[l][k].setVisible(true);
-				current++;
+				
 			}
 			else if(j !=l){
 				System.out.println("A Wall was placed");
 				horWalls[j][i].setVisible(true);
 				horWalls[l][k].setVisible(true);
-				current++;
+				
 			}
 			}
 			else{
 				setColorOfSpace(temp.getRow(),temp.getColumn(),Color.black);
 				System.out.println("CANT PLACE WALL");
 				board.getPlayers().get(current).removePlayer();
-				current++;
+				
 				kickedPlayers++;
 				
 			}
@@ -240,7 +257,7 @@ public class QBoard extends JFrame implements ActionListener {
 		int size = playa.size();
 		current = current%size;
 		while(!playa.get(current).isActive()){
-			current++;
+			
 			current %=size;
 		}
 		if(board.isWinner(kickedPlayers)!=null){
@@ -253,19 +270,109 @@ public class QBoard extends JFrame implements ActionListener {
 		
 		
 	}
-	
-	
-	public void actionPerformed(ActionEvent action){
-		System.out.println(current);
-		String move = ((JButton) action.getSource()).getName();
-		if(moveStack.isEmpty()){
-			moveStack.push(move);
+	public void makeMove(String move, int current){
+
+		String a;
+		String b;
+		if(move.contains("_")){
+			a = move.substring(0, move.indexOf("_"));
+			b = move.substring(move.indexOf("_")+1);	
 		}
 		else{
-			//Send Move to be called here:Currently calls makeMove as the game is Local
-			makeMove(moveStack.pop(),move);
+			a = move;
+			b = move;
 		}
+
+		if(a.equals(b)){
+			//movement of character
+			Player temp =board.getPlayers().get(current);
+			setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),Color.black);
+			if(board.makeMove(a,current)){
+				
+				setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
+			}
+			else{
+				board.getPlayers().get(current).removePlayer();
+				//make it so we can remove player to be added
+				//setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
+				
+
+			}
+
+		}
+		else{
+			//must be trying to place a wall
+			Square temp = board.getPlayers().get(current).getSquare();
+			if(board.makeMove(a+"_"+b,current)){
+			int i = board.convertRowToInt(a.charAt(0));
+			int j = board.converColToInt(a.substring(2));
+			int k = board.convertRowToInt(b.charAt(0));
+			int l = board.converColToInt(b.substring(2));
+
+			if(i !=k){
+				System.out.println("A Wall was placed");
+                System.out.println();
+                vertWalls[j][i].setVisible(true);
+				vertWalls[l][k].setVisible(true);
+				
+			}
+			else if(j !=l){
+				System.out.println("A Wall was placed");
+                System.out.println();
+                horWalls[j][i].setVisible(true);
+				horWalls[l][k].setVisible(true);
+				
+			}
+			}
+			else{
+				setColorOfSpace(temp.getRow(),temp.getColumn(),Color.black);
+				System.out.println("CANT PLACE WALL");
+                System.out.println();
+                board.getPlayers().get(current).removePlayer();
+
+				kickedPlayers++;
+				
+			}
+            this.setTitle(("Player " + current + "'s turn"));
+		}
+
+
 		
+		
+	}
+	public int changeCurrentPlayer(int current){
+        switch(current){
+            case 0:
+                return 0;
+            case 1:
+                return 3;
+            case 2:
+                return 1;
+            case 3:
+                return 2;
+            default:
+                return 4;
+        }
+    }
+
+
+	public void actionPerformed(ActionEvent action){
+		//System.out.println(current);
+        if(isTurn) {
+            String move = ((JButton) action.getSource()).getName();
+            if (moveStack.isEmpty()) {
+                moveStack.push(move);
+            } else {
+                //Send Move to be called here:Currently calls makeMove as the game is Local
+                //makeMove(moveStack.pop(),move);
+                String firstMove = moveStack.pop();
+                if (firstMove.equals(move)) {
+                    currentMove = move;
+                } else {
+                    currentMove = firstMove + '_' + move;
+                }
+            }
+        }
 		
 		//System.out.println(board.makeMove(move, board.getCurrent()));
 		
@@ -275,7 +382,19 @@ public class QBoard extends JFrame implements ActionListener {
 		//how to change the color of the square to represent the actual move
 		//board.makeMove(move, );
 	}
-	
+
+    public String getCurrentMove(){
+        return currentMove;
+    }
+    public void setCurrentMoveToNull(){
+        currentMove = null;
+    }
+
+    public void setIsTurn(boolean isTurn){
+        this.isTurn = isTurn;
+
+    }
+
 	/**
 	 * Changes the color of a chosen space to a the players color.
 	 * 
@@ -292,7 +411,5 @@ public class QBoard extends JFrame implements ActionListener {
 	 * Main used for testing of the GUI game board.
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		new QBoard(4);
-	}
+
 }
