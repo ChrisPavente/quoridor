@@ -1,3 +1,4 @@
+package moveServer;
 //Test Server
 
 import java.io.*;
@@ -77,11 +78,10 @@ class moveServer extends Thread {
                     guiBoard.setIsTurn(true);
                     guiBoard.setCurrentMoveToNull();
                     String move = null;
-                    do {
-                        move = guiBoard.getCurrentMove();
+                    while (guiBoard.getCurrentMove() == null){
+                    	System.out.println("");
                     }
-                    while (guiBoard.getCurrentMove() == null);
-
+                    move = guiBoard.getCurrentMove();
                     out.println("GO " + move);
                     guiBoard.setIsTurn(false);
 

@@ -368,12 +368,13 @@ public class QBoard extends JFrame implements ActionListener {
                 String firstMove = moveStack.pop();
                 if (firstMove.equals(move)) {
                     currentMove = move;
+             
                 } else {
                     currentMove = firstMove + '_' + move;
                 }
             }
         }
-		
+        System.out.println(currentMove);
 		//System.out.println(board.makeMove(move, board.getCurrent()));
 		
 		//For testing purposes
@@ -411,5 +412,5 @@ public class QBoard extends JFrame implements ActionListener {
 	 * Main used for testing of the GUI game board.
 	 * @param args
 	 */
-
+	
 }
