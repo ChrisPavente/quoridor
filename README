@@ -1,4 +1,4 @@
-At this moment we dont have many packages, but I'm going to document our board package to the best of my ability. 
+Note this is an internal documentation on the classes that make up the game. We have another branch called "release" which contains the jar files of our releases and README's for instructions on how to run the specific release.
 
 Package board-
     Player.java-
