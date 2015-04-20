@@ -168,9 +168,9 @@ public class Board {
 	 * 
      * @param current:the player making the move;
 	 * @param s: string for character move or wall placement
-	 * 			 for character move it is of the form: [rowLetter]-[columnRomanNumeral]. Example: A-VIII
-	 * 			 for wall placement it is of the form: [rowLetter]-[columnRomanNumeral]_[rowLetter]-[columnRomanNumeral] Example: A-V_A-VI
-	 * @return false if the move was not legal, otherwise return true.
+	 * 			 for character move it is of the form: [columnRomanNumeral]-[rowLetter]. Example: VIII-A
+	 * 			 for wall placement it is of the form: [columnRomanNumeral]-[rowLetter]_[columnRomanNumeral]-[rowLetter] Example: V-A_VI-A
+	 * @return false if the move was not legal, otherwise return true. 
 	 */
 	public boolean makeMove(String s,int current){
         if(!players.get(current).isActive()){
@@ -178,16 +178,16 @@ public class Board {
         }
         boolean isLegal = true;
         if (s.contains("_")) {
-              int r1 = convertRowToInt(s.charAt(0));
-              int c1 = converColToInt(s.substring(2, s.indexOf("_")));
-              int r2 = convertRowToInt(s.charAt((char)(s.indexOf("_")+1)));
-              int c2 = converColToInt(s.substring(s.lastIndexOf("-")+1));
+        	  int c1 = converColToInt(s.substring(0, s.indexOf("-")));
+              int r1 = convertRowToInt(s.charAt(s.indexOf("-")+1));
+              int c2 = converColToInt(s.substring(s.indexOf("_")+1,s.lastIndexOf("-")));
+              int r2 = convertRowToInt(s.charAt(s.length()-1));
               isLegal = players.get(current).getWallNum()>=1 && placeWall(r1,c1,r2,c2) && players.get(current).useWall();
               }
           
         else if (s.contains("-")) {
-              int r = convertRowToInt(s.charAt(0));
-              int c = converColToInt(s.substring(2));
+              int c = converColToInt(s.substring(0, s.indexOf("-")));
+              int r = convertRowToInt(s.charAt(s.length()-1));
               isLegal = checkIfLegalPlayerMove(r, c, current) &&  players.get(current).move(getSquareAt(r, c));
         }			
         return isLegal;

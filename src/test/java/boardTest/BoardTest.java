@@ -17,26 +17,50 @@ public class BoardTest {
 		
 	}
 
+	
 	@Test
 	public void testMakeMove() {
 		//currently goes through one round of play
 		Board board = new Board(4);
-		assert(board.makeMove("B-V", 0));
+		assert(board.makeMove("V-B", 0));
 		assert(board.getPlayers().get(0).isActive());
-		assert(board.makeMove("H-V", 1));
+		assert(board.makeMove("V-H", 1));
 		assert(board.getPlayers().get(1).isActive());
-		assert(board.makeMove("F-III_G-III", 2));
+		assert(board.makeMove("III-F_III-G", 2));
 		assert(board.getPlayers().get(2).isActive());
-		assert(board.makeMove("F-VII_G-VII", 3));
+		assert(board.makeMove("VII-F_VII-G", 3));
 		assert(board.getPlayers().get(3).isActive());
-		
-		
+			
 	}
+	
+	
+	@Test
+	public void testMakeMove1() {
+		Board board = new Board(2);
+		assertTrue(board.makeMove("V-B",0));
+		assertTrue(board.makeMove("V-H",1));
+		assertTrue(board.makeMove("V-C",0));
+		assertTrue(board.makeMove("V-G",1));
+		assertTrue(board.makeMove("V-D",0));
+		assertTrue(board.makeMove("V-F",1));
+		assertTrue(board.makeMove("V-C_VI-C",0));
+		assertTrue(board.makeMove("V-E",1));
+		assertTrue(board.makeMove("V-F",0));
+		assertTrue(board.makeMove("V-D",1));
+		assertTrue(board.makeMove("V-G",0));
+		assertFalse(board.makeMove("V-C",1));
+		assertTrue(board.makeMove("V-H",0));
+		assertFalse(board.makeMove("V-B",1));
+
+
+	}
+	
+
 	
 	@Test
 	public void testRemovalFromBoard(){
 		Board board = new Board(4);
-		if(!board.makeMove("H-V", 0)){
+		if(!board.makeMove("V-H", 0)){
 			board.getPlayers().get(0).removePlayer();
 		}
 		assertEquals("Player 0 should not be in the game",board.getPlayers().get(0).isActive(),false);
@@ -46,7 +70,7 @@ public class BoardTest {
 	@Test
 	public void testPlaceWall(){
 		Board board = new Board(2);
-		assert(board.makeMove("F-III_G-III", 0));
+		assert(board.makeMove("III-F_III-G", 0));
 		assertEquals("Player 0 should have one less wall",board.getPlayers().get(0).getWallNum(),9);
 		
 	}
@@ -76,4 +100,5 @@ public class BoardTest {
 		
 		
 	}
+	
 }
