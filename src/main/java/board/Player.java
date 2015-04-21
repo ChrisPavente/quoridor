@@ -47,6 +47,10 @@ public class Player{
 		return square;
 	}
 	
+	/**
+	 *  Method to check if the player is in a winning condition.
+	 * @return true if the player has won, false otherwise
+	 */
 	public boolean isAWinner(){
 		//checks if the player is currently in a winning condition
 		if(num==0 && square.getRow()==8){
@@ -120,6 +124,11 @@ public class Player{
 		return col;
 	}
 
+	/**
+	 * Checks to see if the player is in the game.
+	 * 
+	 * @return true if the player is in the game, false otherwise
+	 */
 	public boolean isActive(){
 		return inGame;
 	}

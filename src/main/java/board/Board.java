@@ -383,7 +383,11 @@ public class Board {
 		System.out.println(board.toString());
 	}
 
-	//Returns the Winner of the game
+	/**
+	 * Method to determine the winner of the game
+	 * @param kickedPlayers
+	 * @return the winner of the game
+	 */
 	public Player isWinner(int kickedPlayers){
 		//Called after a move is made to see if that player won
 		for(Player p: players){

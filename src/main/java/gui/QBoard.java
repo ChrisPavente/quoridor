@@ -37,7 +37,7 @@ public class QBoard extends JFrame implements ActionListener {
 	 * Quoridor Board GUI Constructor.
 	 * Creates a 9x9 grid of buttons to play the game. Also instantiates
 	 * buttons for the vertical and horizontal walls.
-	 * @param b: The board object that gets passed to the board created.
+	 * 
 	 */
     public QBoard(int num) {
         super();
@@ -408,9 +408,5 @@ public class QBoard extends JFrame implements ActionListener {
 		squares[x][y].setBackground(c);
 	}
 	
-	/**
-	 * Main used for testing of the GUI game board.
-	 * @param args
-	 */
 	
 }
