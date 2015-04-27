@@ -94,11 +94,21 @@ public class BoardTest {
 		//p.move(board.getSquareAt(2, 5));
 		System.out.println(board);
 		
-		
-		
-		
-		
-		
 	}
+
+    @Test
+    public void testFindNextPlayer(){
+        Board board = new Board(4);
+        List<Player> p = board.getPlayers();
+        assertEquals("Should be 1",board.findNextLegalPlayer(0),1);
+        assertEquals("Should be 0",board.findNextLegalPlayer(3),0);
+        p.get(3).removePlayer();
+        p.get(1).removePlayer();
+        p.get(0).removePlayer();
+        assertEquals("Should be -1",board.findNextLegalPlayer(2),-1);
+        //I realize now that this now has become the same as check for a winner
+
+    }
+
 	
 }

@@ -398,5 +398,22 @@ public class Board {
 		}
 		return null;
 	}
+	
+	
+	/**
+	 * 
+	 * @param current - current player going
+	 * @return the next player (if there is one)
+	 */
+	public int findNextLegalPlayer(int current){
+		//Figured this would be useful for my PlayerInfoHub
+		int size = players.size();
+		for(int i=(current+1)%size;i!=current;i=(i+1)%size){
+			if(players.get(i).isActive()){
+				return i;
+			}
+		}
+		return -1;
+	}
 
 }
