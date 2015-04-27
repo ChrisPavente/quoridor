@@ -31,7 +31,7 @@ public class QBoard extends JFrame implements ActionListener {
 
     private String currentMove;
     private int playerID;
-
+    private PlayerInfoHub hub;
 	private boolean isTurn;
 	/**
 	 * Quoridor Board GUI Constructor.
@@ -47,6 +47,7 @@ public class QBoard extends JFrame implements ActionListener {
             Square s = p.getSquare();
             this.setColorOfSpace(s.getRow(),s.getColumn(), p.getColor());
         }
+       
 
     }
 	public QBoard(int num, int ID) {
@@ -67,7 +68,7 @@ public class QBoard extends JFrame implements ActionListener {
 	private void initialize() {
 		setName(BOARD_TITLE);
 		setTitle("Player " + (playerID+1));
-		setSize(345, 369);
+		setSize(800, 500);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
 
@@ -78,7 +79,9 @@ public class QBoard extends JFrame implements ActionListener {
 		buttonCanvas.setSize(356, 356);
 
 		add(buttonCanvas);
-
+		hub = new PlayerInfoHub(board);
+	    this.add(hub);
+	    hub.setBounds(700,10,500,500);
 		setVisible(true);
 	}
 	
@@ -137,7 +140,7 @@ public class QBoard extends JFrame implements ActionListener {
 	 */
 	public JButton buttonHelper(int i, int j){
 		JButton button = new JButton("");
-		button.setName(getRowLetter(i/2+1) + "-" + getColumnRomanNumeral(j/2 + 1));
+		button.setName(getColumnRomanNumeral(j/2 + 1)+ "-" + getRowLetter(i/2+1));
 		
 		button.setBackground(SQUARE_DEFAULT_COLOR);
 		buttonCanvas.add(button);
@@ -217,7 +220,6 @@ public class QBoard extends JFrame implements ActionListener {
 				board.getPlayers().get(current).removePlayer();
 				//make it so we can remove player to be added
 				//setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
-				
 				kickedPlayers++;
 			}
 
@@ -232,13 +234,13 @@ public class QBoard extends JFrame implements ActionListener {
 			int l = board.converColToInt(b.substring(2));
 			System.out.println(a+"_"+b);
 			if(i !=k){
-				System.out.println("A Wall was placed");
+			//	System.out.println("A Wall was placed");
 				vertWalls[j][i].setVisible(true);
 				vertWalls[l][k].setVisible(true);
 				
 			}
 			else if(j !=l){
-				System.out.println("A Wall was placed");
+				//System.out.println("A Wall was placed");
 				horWalls[j][i].setVisible(true);
 				horWalls[l][k].setVisible(true);
 				
@@ -246,7 +248,7 @@ public class QBoard extends JFrame implements ActionListener {
 			}
 			else{
 				setColorOfSpace(temp.getRow(),temp.getColumn(),Color.black);
-				System.out.println("CANT PLACE WALL");
+				//System.out.println("CANT PLACE WALL");
 				board.getPlayers().get(current).removePlayer();
 				
 				kickedPlayers++;
@@ -284,31 +286,33 @@ public class QBoard extends JFrame implements ActionListener {
 		}
 
 		if(a.equals(b)){
+			hub.updateHub(false);
 			//movement of character
 			Player temp =board.getPlayers().get(current);
 			setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),Color.black);
 			if(board.makeMove(a,current)){
-				
 				setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
 			}
 			else{
-				board.getPlayers().get(current).removePlayer();
 				//make it so we can remove player to be added
-				//setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
-				
+				setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
+				temp.removePlayer();
 
 			}
 
 		}
 		else{
+			
 			//must be trying to place a wall
 			Square temp = board.getPlayers().get(current).getSquare();
-			if(board.makeMove(a+"_"+b,current)){
-			int i = board.convertRowToInt(a.charAt(0));
-			int j = board.converColToInt(a.substring(2));
-			int k = board.convertRowToInt(b.charAt(0));
-			int l = board.converColToInt(b.substring(2));
-
+			String s = a+"_"+b;
+			if(board.makeMove(s,current)){
+			
+			int i =board.convertRowToInt(s.charAt(s.indexOf("-")+1));
+            int j = board.converColToInt(s.substring(0, s.indexOf("-")));
+            int k =board.convertRowToInt(s.charAt(s.length()-1));
+            int l =   board.converColToInt(s.substring(s.indexOf("_")+1,s.lastIndexOf("-")));
+            hub.updateHub(true);
 			if(i !=k){
 				System.out.println("A Wall was placed");
                 System.out.println();

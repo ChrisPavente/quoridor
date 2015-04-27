@@ -79,7 +79,7 @@ class moveServer extends Thread {
                     guiBoard.setCurrentMoveToNull();
                     String move = null;
                     while (guiBoard.getCurrentMove() == null){
-                    	System.out.println("");
+                    	Thread.sleep(200);
                     }
                     move = guiBoard.getCurrentMove();
                     out.println("GO " + move);

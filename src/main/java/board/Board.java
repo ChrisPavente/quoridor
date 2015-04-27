@@ -183,13 +183,13 @@ public class Board {
               int c2 = converColToInt(s.substring(s.indexOf("_")+1,s.lastIndexOf("-")));
               int r2 = convertRowToInt(s.charAt(s.length()-1));
               isLegal = players.get(current).getWallNum()>=1 && placeWall(r1,c1,r2,c2) && players.get(current).useWall();
-              }
+        	}
           
         else if (s.contains("-")) {
               int c = converColToInt(s.substring(0, s.indexOf("-")));
               int r = convertRowToInt(s.charAt(s.length()-1));
               isLegal = checkIfLegalPlayerMove(r, c, current) &&  players.get(current).move(getSquareAt(r, c));
-        }			
+        }		
         return isLegal;
 	}
 	
