@@ -46,11 +46,11 @@ public class Board {
 		int w = WALLS/numberOfPlayers;
 		
 		players = new ArrayList<Player>();
-		players.add(new Player(grid[0][4],w,0));
-		players.add(new Player(grid[8][4], w,1));
+		players.add(new Player(grid[0][4],w,0,getWinningSquares(0)));
+		players.add(new Player(grid[8][4], w,1,getWinningSquares(1)));
 		if (numberOfPlayers == 4) {
-			players.add(new Player(grid[4][0],w,2));
-			players.add(new Player(grid[4][8], w,3));
+			players.add(new Player(grid[4][8], w,2,getWinningSquares(2)));
+			players.add(new Player(grid[4][0],w,3,getWinningSquares(3)));
 		}
 	}
 
@@ -399,6 +399,21 @@ public class Board {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @return -1 if there is no winner, else it returns the winner's id num
+	 */
+	public int getWinnerNum(){
+		int next = this.findNextLegalPlayer(0);
+		if(next ==-1){
+			return 0;
+		}
+		next = this.findNextLegalPlayer(next);
+		if(next ==-1){//There are no more legal players after the first one we find!
+			return findNextLegalPlayer(0); 
+		}
+		return -1;
+	}
 	
 	/**
 	 * 
@@ -415,5 +430,40 @@ public class Board {
 		}
 		return -1;
 	}
+	
+	/**
+	 * 
+	 * @param num the player number we want the array of squares for
+	 * @return
+	 */
+	public Square[] getWinningSquares(int num){
+		Square[] sqrs = new Square[9];
+		if(num ==0){
+			for(int i=0;i<9;i++){
+				sqrs[i]= grid[i][0];
+			}
+			
+		}
+		if(num ==1){
+			for(int i=0;i<9;i++){
+				sqrs[i]= grid[i][8];
+			}
+			
+		}
+		if(num ==2){
+			for(int i=0;i<9;i++){
+				sqrs[i]= grid[8][i];
+			}
+			
+		}
+		if(num ==3){
+			for(int i=0;i<9;i++){
+				sqrs[i]= grid[0][i];
+			}
+			
+		}
+		return sqrs;
+	}
+	
 
 }

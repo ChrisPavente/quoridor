@@ -16,8 +16,9 @@ public class Player{
 	private int num; //Knows which number player it is, MAY helpful for shortest path
 	private Square square;
 	private int walls;
+	private Square[] winningSquares;
 	private String oldShortestPath;//Keeps a representation of the shortest path
-									//We hold on to this, because in some cases the shortest path hasn't changed so we can use our old path
+	//We hold on to this, because in some cases the shortest path hasn't changed so we can use our old path
 	private boolean inGame;
 	private final static Color[] color = {Color.yellow, Color.green, Color.blue, Color.red};
 	private Color col;
@@ -31,10 +32,11 @@ public class Player{
 	 * @param walls: the number of walls the player has remaining
 	 * @param num: the players reference number
 	 */
-	public Player(Square s,int walls,int num) {
+	public Player(Square s,int walls,int num,Square[] winningSquares) {
 		this.num =num;
 		this.square = s;
 		this.walls=walls;
+		this.winningSquares = winningSquares;
 		inGame = true;
 		setDefaultColor();
 	}	
@@ -52,14 +54,11 @@ public class Player{
 	 * @return true if the player has won, false otherwise
 	 */
 	public boolean isAWinner(){
-		//checks if the player is currently in a winning condition
-		if(num==0 && square.getRow()==8){
-			return true;
+		for(Square s: winningSquares){
+			if(s.equals(square)){
+				return true;
+			}
 		}
-		if(num==1 && square.getRow()==0){
-			return true;
-		}
-		//We dont have more players yet so it would be silly to add more win conditions yet
 		return false;
 	}
 	
@@ -141,6 +140,12 @@ public class Player{
 		square = null;
 		inGame = false;
 	}
+	
+	//Returns winningSquares array
+	public Square[] getWinningSquares(){
+		return winningSquares;
+	}
 
+	
 	
 } 
