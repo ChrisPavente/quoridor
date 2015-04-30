@@ -95,7 +95,7 @@ public class Board {
 			return false;
 		}
 		boolean check = false;
-		if(Math.abs(x1-x2)==1){
+		if(Math.abs(x1-x2)==1 && !(checkIfWallIsThere(x1,y1,true)) && !(checkIfWallIsThere(x2,y2,true))){
 			//The wall is horizontal
 			Square s1 =  grid[x1][y1];
 			Square s2 = grid[x2][y2];
@@ -105,7 +105,7 @@ public class Board {
 			}
 			
 		}
-		else if(Math.abs(y1-y2)==1){
+		else if(Math.abs(y1-y2)==1 && !(checkIfWallIsThere(x1,y1,false)) && !(checkIfWallIsThere(x2,y2,false))){
 			Square s1 =  grid[x1][y1];
 			Square s2 = grid[x2][y2];
 			check = s1.breakLink(grid[x1+1][y1]) && s2.breakLink(grid[x2+1][y2]);
