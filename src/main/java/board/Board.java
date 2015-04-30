@@ -436,29 +436,29 @@ public class Board {
 	 * @param num the player number we want the array of squares for
 	 * @return
 	 */
-	public Square[] getWinningSquares(int num){
+	private Square[] getWinningSquares(int num){
 		Square[] sqrs = new Square[9];
 		if(num ==0){
-			for(int i=0;i<9;i++){
-				sqrs[i]= grid[i][0];
-			}
-			
-		}
-		if(num ==1){
-			for(int i=0;i<9;i++){
-				sqrs[i]= grid[i][8];
-			}
-			
-		}
-		if(num ==2){
 			for(int i=0;i<9;i++){
 				sqrs[i]= grid[8][i];
 			}
 			
 		}
-		if(num ==3){
+		if(num ==1){
 			for(int i=0;i<9;i++){
 				sqrs[i]= grid[0][i];
+			}
+			
+		}
+		if(num ==2){
+			for(int i=0;i<9;i++){
+				sqrs[i]= grid[i][0];
+			}
+			
+		}
+		if(num ==3){
+			for(int i=0;i<9;i++){
+				sqrs[i]= grid[i][8];
 			}
 			
 		}

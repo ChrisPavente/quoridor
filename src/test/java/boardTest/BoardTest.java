@@ -127,5 +127,23 @@ public class BoardTest {
 
     }
 
+    @Test
+    public void testWinningSquares(){
+         Board board = new Board(4);
+         List<Player> p = board.getPlayers();
+         Square s1 = p.get(0).getSquare();
+         Square s2 = p.get(1).getWinningSquares()[4];
+         assertEquals("Should be equal", s1,s2);
+         s1 = p.get(1).getSquare();
+         s2 = p.get(0).getWinningSquares()[4];
+         assertEquals("Should be equal", s1,s2);
+         s1 = p.get(2).getSquare();
+         s2 = p.get(3).getWinningSquares()[4];
+         assertEquals("Should be equal", s1,s2);
+         s1 = p.get(3).getSquare();
+         s2 = p.get(2).getWinningSquares()[4];
+         assertEquals("Should be equal", s1,s2);
+    }
+
 	
 }
