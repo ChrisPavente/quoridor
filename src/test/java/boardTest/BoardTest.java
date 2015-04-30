@@ -54,6 +54,23 @@ public class BoardTest {
 
 
 	}
+
+	@Test
+	public void testMakeMove2() {
+		Board board = new Board(2);
+		assertTrue(board.makeMove("VI-A_VI-B", 0));
+		assertTrue(board.makeMove("VI-C_VI-D",1));
+		assertTrue(board.makeMove("VI-E_VI-F",0));
+		assertTrue(board.makeMove("VI-G_VI-H",1));
+		assertFalse(board.makeMove("VI-H_VI-I", 0));
+		assertFalse(board.makeMove("VI-H_VI-I", 1));
+		//1 VI-A_VI-B  0 true
+		//2 VI-C_VI-D  1 true
+		//3 VI-E_VI-F  0 true
+		//4 VI-G_VI-H  1 true
+		//5 VI-H_VI-I  0 false  
+		//6 VI-H_VI-I  0 false  
+	}
 	
 
 	
