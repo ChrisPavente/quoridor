@@ -13,9 +13,7 @@ public class Square {
 	private int row;
 	private int col;
     
-    //Soon to be removed
-	private boolean occupied;
-
+    
 	protected Square adjacentUp;
 	protected Square adjacentDown;
 	protected Square adjacentRight;
@@ -30,7 +28,6 @@ public class Square {
 	 * @param col: the column that the square is located on the board
 	 */
 	public Square(int row, int col) {
-		this.occupied = false;
         this.row = row;
         this.col = col;
         this.adjacentUp = null;
@@ -89,28 +86,7 @@ public class Square {
 	}
 
 
-	/**
-	 * Method used when given a square to determine where it is in relation
-	 * to the current square
-	 * @param square: given square trying to find out it's direction of
-	 * @return the direction the square is located
-	 */
-	private String determineWhichDirection(Square square) {
-		String direction = null;
-        if (this.row == square.row+1 && this.col == square.col)
-            //if here then square is directly above this 
-            direction = "Up";
-        else if (this.row == square.row-1 && this.col == square.col)
-            //if here then square is directly below this
-            direction = "Down";
-        else if (this.row == square.row && this.col == square.col+1)
-        	//if here then square is directly to the left of this
-        	direction = "Left";
-        else if (this.row == square.row && this.col == square.col-1)
-        	//if here then square is directly to the right of this
-        	direction = "Right";
-        return direction;
-	}
+
 
 
 	/**
@@ -130,28 +106,6 @@ public class Square {
 		return this.col;
 	}
 
-	/**
-	 * Method to check if a square is occupied
-	 * @return true is a player is on the square, false otherwise
-	 */
-	public boolean isOccupied() {
-		return this.occupied;
-	}
-
-	/**
-	 * Method to set a square's flag to occupied once a player
-	 * moves to that square.
-	 */
-	public void isNowOccupied() {
-		this.occupied = true;
-	}
-
-	/**
-	 * Method to set a square's flag to not occupied if a player is removed.
-	 */
-	public void isFree() {
-		this.occupied = false;
-	}
 	
 
 	/**

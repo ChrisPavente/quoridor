@@ -295,7 +295,12 @@ public class Board {
           }
           return false;
     }
-
+    
+    /**
+     * Method to check if a player is in a desired location
+     * @param Square s: the square to be check for a player
+     * @return true if a player is located here, false otherwise
+     */
     private boolean checkIfPlayerIsThere(Square s){
     	for (int i = 0; i < players.size(); i++) {
             if (players.get(i).isActive() && players.get(i).getSquare().equals(s))
@@ -304,18 +309,7 @@ public class Board {
     	return false;
     }
     
-    /**
-     * Method to check if a player is in a desired location
-     * @param r: row number of desired location
-     * @param c: column number of desired location
-     * @return true if a player is located here, false otherwise
-     */
-    private boolean checkIfPlayerIsThere(int r, int c) {
-          Square s = getSquareAt(r, c);
-          return checkIfPlayerIsThere(s);
-    }
-
-	
+   
 	/**
 	 * A |w| or -w- represents a wall in the grid, where as a |+| or -+- represents a legal path
 	 * any blank space is a legal place for a player to reside and the number (0,1,2,3) represents the 
@@ -434,7 +428,8 @@ public class Board {
 	/**
 	 * 
 	 * @param num the player number we want the array of squares for
-	 * @return
+	 * @return an Array of Squares to be passed into the player constructor
+	 *		    will help with checking winning conditions!
 	 */
 	private Square[] getWinningSquares(int num){
 		Square[] sqrs = new Square[9];

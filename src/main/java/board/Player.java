@@ -17,8 +17,7 @@ public class Player{
 	private Square square;
 	private int walls;
 	private Square[] winningSquares;
-	private String oldShortestPath;//Keeps a representation of the shortest path
-	//We hold on to this, because in some cases the shortest path hasn't changed so we can use our old path
+	
 	private boolean inGame;
 	private final static Color[] color = {Color.yellow, Color.green, Color.blue, Color.red};
 	private Color col;
@@ -141,7 +140,10 @@ public class Player{
 		inGame = false;
 	}
 	
-	//Returns winningSquares array
+	/** Helpful to see where a player needs to go to get into a winning state
+	 * 
+	 * @return returns the array of squares the are the winning conditions for this player!
+	 */
 	public Square[] getWinningSquares(){
 		return winningSquares;
 	}
