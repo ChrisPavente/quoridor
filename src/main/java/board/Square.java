@@ -10,14 +10,15 @@ package board;
  */
 public class Square {
 
-	private int row;
-	private int col;
+	public int row;
+	public int col;
     
     
 	protected Square adjacentUp;
 	protected Square adjacentDown;
 	protected Square adjacentRight;
 	protected Square adjacentLeft;
+	
 	
 	/**
 	 * The Square Constructor.

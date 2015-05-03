@@ -147,7 +147,6 @@ public class Player{
 	public Square[] getWinningSquares(){
 		return winningSquares;
 	}
-
 	
 	
 } 

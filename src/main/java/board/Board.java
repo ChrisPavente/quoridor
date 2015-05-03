@@ -2,7 +2,10 @@ package board;
 
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
+
 
 /**
  * The Board Class builds the board grid, allows for placement of walls, allows for calls
@@ -27,7 +30,7 @@ public class Board {
 	
 	private Square [][] grid; // Two-dimensional array that will represent the grid
 	private List<Player> players; // ArrayList to store the players in the game
-	//private int current; // Keeps track of what player's turn it is
+	private int current; // Keeps track of what player's turn it is
 
 	
 	/**
@@ -172,8 +175,8 @@ public class Board {
 	 * 			 for wall placement it is of the form: [columnRomanNumeral]-[rowLetter]_[columnRomanNumeral]-[rowLetter] Example: V-A_VI-A
 	 * @return false if the move was not legal, otherwise return true. 
 	 */
-	public boolean makeMove(String s,int current){
-        if(!players.get(current).isActive()){
+	public boolean makeMove(String s,int cur){
+        if(!players.get(cur).isActive()){
             throw new IllegalArgumentException("That Player is not in the game");
         }
         boolean isLegal = true;
@@ -182,14 +185,15 @@ public class Board {
               int r1 = convertRowToInt(s.charAt(s.indexOf("-")+1));
               int c2 = converColToInt(s.substring(s.indexOf("_")+1,s.lastIndexOf("-")));
               int r2 = convertRowToInt(s.charAt(s.length()-1));
-              isLegal = players.get(current).getWallNum()>=1 && placeWall(r1,c1,r2,c2) && players.get(current).useWall();
+              isLegal = players.get(cur).getWallNum()>=1 && placeWall(r1,c1,r2,c2) && players.get(cur).useWall();
         	}
           
         else if (s.contains("-")) {
               int c = converColToInt(s.substring(0, s.indexOf("-")));
               int r = convertRowToInt(s.charAt(s.length()-1));
-              isLegal = checkIfLegalPlayerMove(r, c, current) &&  players.get(current).move(getSquareAt(r, c));
-        }		
+              isLegal = checkIfLegalPlayerMove(r, c, cur) &&  players.get(cur).move(getSquareAt(r, c));
+        }	
+        current = cur;
         return isLegal;
 	}
 	
@@ -291,6 +295,25 @@ public class Board {
           return true;
           }
           if(!b && s.adjacentDown==null){
+        	  return true;
+          }
+          return false;
+    }
+    
+    private boolean checkIfWallIsThere(Square sq, int direction){
+    	if(direction<0 && direction>3){
+			throw new IllegalArgumentException();
+		}
+          if(direction == 0 && sq.adjacentUp == null){
+        	  return true;
+          }
+          if(direction == 1 && sq.adjacentRight == null){
+        	  return true;
+          }
+          if(direction == 2 && sq.adjacentDown == null){
+        	  return true;
+          }
+          if(direction == 3 && sq.adjacentLeft == null){
         	  return true;
           }
           return false;
@@ -460,5 +483,36 @@ public class Board {
 		return sqrs;
 	}
 	
+    /**
+     * Get a list of valid move squares from a position
+     * 
+     * @param current: origin square
+     * @return reachable empty squares
+     */
+	//Need to check for wall placement as well!!!!!
+    public List<Square> nextPossibleValidMove(Square current) {
+        LinkedList<Square> adjacent = new LinkedList<Square>();
+        LinkedList<Square> moves = new LinkedList<Square>();
+        Square neighbour;
+        for (int i = 0; i < 4; i++) {
+            neighbour = current.getNeighbour(i);
+            if (neighbour != null) {
+                adjacent.add(neighbour);
+            }
+        }
+        
+        int count = 0; //counts the direction we are on
+        for (Square sq : adjacent) {
+            if (checkIfPlayerIsThere(sq)) {
+            	Square sq2 = sq.getNeighbour(count);
+            	moves.add(sq2);
+            } else {
+                moves.add(sq);
+            }
+            count++;
+        }
+        return moves;
+    }   
+    
 
 }
