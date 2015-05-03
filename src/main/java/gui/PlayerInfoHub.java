@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Color;
 
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,7 +25,7 @@ public class PlayerInfoHub extends JPanel {
 	
 	//Sets up the UserInfoFrame
 	private void runOnce(){
-		this.setSize(500, 500);
+		this.setSize(600, 450);
 		currentPlayer =0; //always starts at zero
 		playerNum = gameBoard.getPlayers().size();
 		//currentWalls = new int[playerNum];
@@ -36,11 +37,9 @@ public class PlayerInfoHub extends JPanel {
 		
 			currentPlayerField[i] = new JButton();
 			currentPlayerField[i].setSize(50, 50);
-			placeComponents(i);
 			currentPlayerField[i].setBackground(Color.black);
 			this.add(currentPlayerField[i]);
 			this.add(playerWallInfo[i]);
-			//currentPlayerField[currentPlayer].setBackground(Color.black);
 			
 		}
 		currentPlayerField[currentPlayer].setBackground(gameBoard.getPlayers().get(0).getColor());
@@ -48,29 +47,7 @@ public class PlayerInfoHub extends JPanel {
 		
 		
 	}
-	
-	//Silly way to place the different components on the frame
-	private void placeComponents(int p){
-		JLabel label = playerWallInfo[p];
-		JButton button = currentPlayerField[p];
-		if(p==0){
-			label.setBounds(40, 40, 5, 10);
-			button.setBounds(50, 50, 0, 350);
-		}
-		else if(p==1){
-			label.setBounds(40, 40,5, 200);
-			button.setBounds(50, 50,50, 350);
-		}
-		else if(p==2){
-			label.setBounds(40, 40, 250, 10);
-			button.setBounds(50, 50,100, 350);
-		}
-		else{
-			label.setBounds(40, 40, 250, 200);
-			button.setBounds(50, 50,150, 350);
-		}
-		
-	}
+
 	
 	//Updates the moveHub after a move has been made
 	//Param: boolean move - true if the move was a wall move

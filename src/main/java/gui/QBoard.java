@@ -25,6 +25,7 @@ public class QBoard extends JFrame implements ActionListener {
 	public JButton[][] horWalls = new JButton[boardlth][boardlth-1]; //Stores the horizontal wall buttons
 
 	private JPanel buttonCanvas; // Canvas that holds all the buttons of the game
+	private JPanel hubCanvas;
 	
 	private Board board;
 	private Stack<String> moveStack = new Stack<String>();
@@ -68,7 +69,7 @@ public class QBoard extends JFrame implements ActionListener {
 	private void initialize() {
 		setName(BOARD_TITLE);
 		setTitle("Player " + (playerID+1));
-		setSize(800, 500);
+		setSize(600, 450);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
 
@@ -79,9 +80,17 @@ public class QBoard extends JFrame implements ActionListener {
 		buttonCanvas.setSize(356, 356);
 
 		add(buttonCanvas);
+		
+		hubCanvas = new JPanel();
+		hubCanvas.setLayout(new BorderLayout());
+		hubCanvas.setPreferredSize(new Dimension(150, 50));
 		hub = new PlayerInfoHub(board);
-	    this.add(hub);
-	    hub.setBounds(700,10,500,500);
+		hubCanvas.add(hub);
+	    add(hubCanvas, BorderLayout.EAST);
+	    //BorderLayout.EAST
+	    //BorderLayout.AFTER_LAST_LINE
+	    //BorderLayout.BEFORE_FIRST_LINE
+	    //BorderLayout.LINE_START
 		setVisible(true);
 	}
 	
@@ -90,7 +99,7 @@ public class QBoard extends JFrame implements ActionListener {
 	 * and row wall clickable buttons.
 	 */
 	private void initializeButtons(){
-		int fromTop = 5; // Offsets the grid from the edge of the board
+		int fromTop = 30; // Offsets the grid from the edge of the board
 		boolean walls = false;
 		for(int i = 0; i < 17; i++){
 			int fromLeft = 6;
@@ -411,6 +420,5 @@ public class QBoard extends JFrame implements ActionListener {
 	public void setColorOfSpace(int y, int x, Color c) {
 		squares[x][y].setBackground(c);
 	}
-	
 	
 }
