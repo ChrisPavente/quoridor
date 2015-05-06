@@ -5,6 +5,8 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
+import board.GameEngine;
+
 import gui.QBoard;
 
 
@@ -19,7 +21,7 @@ class moveServer extends Thread {
     private Scanner parser;
     private String[] playerList;
 
-    private QBoard guiBoard;
+    private GameEngine gameEngine;
 
     public moveServer(Socket s) {
         this.s = s;
@@ -57,7 +59,7 @@ class moveServer extends Thread {
             //Receives the players to signal the start of the game
             parser = new Scanner(in.readLine());
             playerList = genPList(parser);
-            guiBoard = new QBoard(playerList.length, findPlayerId(serverName, playerList));
+            gameEngine = new QBoard(playerList.length, findPlayerId(serverName, playerList));
 
 
             //Game loop
@@ -74,16 +76,16 @@ class moveServer extends Thread {
 					 * this method will calculate a move and send back
 					 * out.println("GO" + board.makeMove());
 					*/
-
-                    guiBoard.setIsTurn(true);
-                    guiBoard.setCurrentMoveToNull();
+                   
+                    gameEngine.setTurn();
+                    //gameEngine.setCurrentMoveToNull(); done in QBoard now so we can use an interface
                     String move = null;
-                    while (guiBoard.getCurrentMove() == null){
+                    while (gameEngine.getMove() == null){
                     	Thread.sleep(200);
                     }
-                    move = guiBoard.getCurrentMove();
+                    move = gameEngine.getMove();
                     out.println("GO " + move);
-                    guiBoard.setIsTurn(false);
+                    gameEngine.setTurn();
 
 
                 }
@@ -94,7 +96,7 @@ class moveServer extends Thread {
                     System.out.println(player + " WENT " + moveString);
                     System.out.println();
 
-                    guiBoard.makeMove(moveString, findPlayerId(player, playerList));
+                    gameEngine.makeMove(moveString, findPlayerId(player, playerList));
 					
 					/*WENT method here
 					 * INPUT: WENT <player-id> <move-string>

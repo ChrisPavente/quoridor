@@ -11,10 +11,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import board.Board;
+import board.GameEngine;
 import board.Player;
 import board.Square;
 
-public class QBoard extends JFrame implements ActionListener {
+public class QBoard extends JFrame implements ActionListener, GameEngine {
 
 	public final static String BOARD_TITLE = "Quoridor Board"; //The title on our game board
 	public final static Color SQUARE_DEFAULT_COLOR = Color.black; //The default color of the buttons on the game board
@@ -25,7 +26,6 @@ public class QBoard extends JFrame implements ActionListener {
 	public JButton[][] horWalls = new JButton[boardlth][boardlth-1]; //Stores the horizontal wall buttons
 
 	private JPanel buttonCanvas; // Canvas that holds all the buttons of the game
-	private JPanel hubCanvas;
 	
 	private Board board;
 	private Stack<String> moveStack = new Stack<String>();
@@ -69,7 +69,7 @@ public class QBoard extends JFrame implements ActionListener {
 	private void initialize() {
 		setName(BOARD_TITLE);
 		setTitle("Player " + (playerID+1));
-		setSize(600, 450);
+		setSize(800, 500);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
 
@@ -80,17 +80,9 @@ public class QBoard extends JFrame implements ActionListener {
 		buttonCanvas.setSize(356, 356);
 
 		add(buttonCanvas);
-		
-		hubCanvas = new JPanel();
-		hubCanvas.setLayout(new BorderLayout());
-		hubCanvas.setPreferredSize(new Dimension(150, 50));
 		hub = new PlayerInfoHub(board);
-		hubCanvas.add(hub);
-	    add(hubCanvas, BorderLayout.EAST);
-	    //BorderLayout.EAST
-	    //BorderLayout.AFTER_LAST_LINE
-	    //BorderLayout.BEFORE_FIRST_LINE
-	    //BorderLayout.LINE_START
+	    this.add(hub);
+	    hub.setBounds(700,10,500,500);
 		setVisible(true);
 	}
 	
@@ -99,7 +91,7 @@ public class QBoard extends JFrame implements ActionListener {
 	 * and row wall clickable buttons.
 	 */
 	private void initializeButtons(){
-		int fromTop = 30; // Offsets the grid from the edge of the board
+		int fromTop = 5; // Offsets the grid from the edge of the board
 		boolean walls = false;
 		for(int i = 0; i < 17; i++){
 			int fromLeft = 6;
@@ -397,15 +389,18 @@ public class QBoard extends JFrame implements ActionListener {
 		//board.makeMove(move, );
 	}
 
-    public String getCurrentMove(){
+    public String getMove(){
         return currentMove;
     }
-    public void setCurrentMoveToNull(){
-        currentMove = null;
-    }
 
-    public void setIsTurn(boolean isTurn){
-        this.isTurn = isTurn;
+    /**
+     * PostCondition: currentMove is null
+     * 				  and isTurn = !isTurn
+     * 
+     */
+    public void setTurn(){//Flips the switch for the player to be able to go
+    	this.currentMove =null;
+        this.isTurn = !isTurn;
 
     }
 
@@ -420,5 +415,12 @@ public class QBoard extends JFrame implements ActionListener {
 	public void setColorOfSpace(int y, int x, Color c) {
 		squares[x][y].setBackground(c);
 	}
+	
+	@Override
+	public void bootPlayer(int n) {
+		// TODO Auto-generated method stub
+		//Should handle booting the player n
+	}
+	
 	
 }

@@ -109,8 +109,6 @@ public class Quoridor extends JFrame implements ActionListener {
 		if (buttons.get(0) == action.getSource()) {
 			QBoard guiBoard = new QBoard(4);
 			guiBoard.setVisible(true);
-		    guiBoard.setIsTurn(true);
-            guiBoard.setCurrentMoveToNull();
             String move = null;
             
 		}
