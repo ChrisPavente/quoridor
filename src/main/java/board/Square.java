@@ -19,6 +19,8 @@ public class Square {
 	protected Square adjacentRight;
 	protected Square adjacentLeft;
 	
+	 public Square parent;
+	
 	
 	/**
 	 * The Square Constructor.
@@ -165,4 +167,29 @@ public class Square {
 	}
 
 
+    /**
+     * Traverse upwards through a position path and return the length.
+     * 
+     * @return length of position path
+     */
+    public int pathLength() {
+        if (parent == null) {
+            return 1;
+        } else {
+            return parent.pathLength() + 1;
+        }
+    }
+    
+    /**
+     * Get the root node of a path.
+     * 
+     * @return root node
+     */
+    public Square root() {
+        if (parent == null) {
+            return this;
+        } else {
+            return parent.root();
+        }
+    }
 }
