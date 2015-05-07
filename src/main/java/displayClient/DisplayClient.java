@@ -49,7 +49,7 @@ public class DisplayClient{
             playerIDs[i] = playerIDs[i].substring(playerIDs[i].indexOf(' ') + 1);
 	    }
         printData();
-
+        board = new Board(numOfPlayers);
 	    //  Send Player message to all players
         sendPlayerMessage();
         System.out.println();
@@ -197,7 +197,7 @@ public class DisplayClient{
 
     // Checks if the move is legal and returns the value
     public boolean checkIfLegal(int playerOffset, String move){
-        return true;
+        return board.makeMove(move, playerOffset);
     }
 
     //  Sends BOOT message to all move servers if illegal move was made

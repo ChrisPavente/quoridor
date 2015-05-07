@@ -76,7 +76,7 @@ class moveServer extends Thread {
 					 * this method will calculate a move and send back
 					 * out.println("GO" + board.makeMove());
 					*/
-                   
+                    
                     gameEngine.setTurn();
                     //gameEngine.setCurrentMoveToNull(); done in QBoard now so we can use an interface
                     String move = null;

@@ -384,7 +384,9 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
 	}
 
     public String getMove(){
-    	isTurn = false;
+    	if(currentMove !=null){
+    		isTurn = false;
+    	}
         return currentMove;
     }
 
@@ -396,8 +398,6 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
     public void setTurn(){//Flips the switch for the player to be able to go
     	isTurn = true;
     	currentMove=null;
-    	
-
     }
 
 	/**
