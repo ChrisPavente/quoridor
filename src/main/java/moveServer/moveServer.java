@@ -5,6 +5,7 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
+import ai.AI;
 import board.GameEngine;
 
 import gui.QBoard;
@@ -59,7 +60,7 @@ class moveServer extends Thread {
             //Receives the players to signal the start of the game
             parser = new Scanner(in.readLine());
             playerList = genPList(parser);
-            gameEngine = new QBoard(playerList.length, findPlayerId(serverName, playerList));
+            gameEngine = new AI(playerList.length, findPlayerId(serverName, playerList));
 
 
             //Game loop
@@ -76,7 +77,7 @@ class moveServer extends Thread {
 					 * this method will calculate a move and send back
 					 * out.println("GO" + board.makeMove());
 					*/
-                    
+                   
                     gameEngine.setTurn();
                     //gameEngine.setCurrentMoveToNull(); done in QBoard now so we can use an interface
                     String move = null;
@@ -85,7 +86,7 @@ class moveServer extends Thread {
                     }
                     move = gameEngine.getMove();
                     out.println("GO " + move);
-                    //gameEngine.setTurn();
+                    gameEngine.setTurn();
 
 
                 }
@@ -107,11 +108,6 @@ class moveServer extends Thread {
                 }
                 else if(message.equals("BOOT")) {
                     System.out.println("BOOT");
-                    String player = parser.next();
-                    if(player.equals(serverName)){
-                    	//END!!!
-                    }
-                    gameEngine.bootPlayer(findPlayerId(player,playerList));
 					/* BOOT method here
 					 * INPUT BOOT <player-id>
 					 * removes the booted players pawns from the game board
@@ -121,11 +117,7 @@ class moveServer extends Thread {
                 }
                 else if(message.equals("VICTOR")) {
                     System.out.println("VICTOR");
-                    String player = parser.next();
                     victor = true;
-                    if(player.equals(serverName)){
-                    	//WE WON!
-                    }
 					/*VICTOR method
 					 * input: VICTOR <player-id>
 					 * the game is over and <player> has won
