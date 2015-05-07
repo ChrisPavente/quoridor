@@ -248,11 +248,7 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
 			}
 			}
 			else{
-				setColorOfSpace(temp.getRow(),temp.getColumn(),Color.black);
-				//System.out.println("CANT PLACE WALL");
-				board.getPlayers().get(current).removePlayer();
-				
-				kickedPlayers++;
+			
 				
 			}
 		}
@@ -334,8 +330,6 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
 				System.out.println("CANT PLACE WALL");
                 System.out.println();
                 board.getPlayers().get(current).removePlayer();
-
-				kickedPlayers++;
 				
 			}
             this.setTitle(("Player " + current + "'s turn"));
@@ -390,6 +384,7 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
 	}
 
     public String getMove(){
+    	isTurn = false;
         return currentMove;
     }
 
@@ -399,8 +394,9 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
      * 
      */
     public void setTurn(){//Flips the switch for the player to be able to go
-    	this.currentMove =null;
-        this.isTurn = !isTurn;
+    	isTurn = true;
+    	currentMove=null;
+    	
 
     }
 
@@ -418,6 +414,11 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
 	
 	@Override
 	public void bootPlayer(int n) {
+		Player temp = board.getPlayers().get(n);
+		setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),Color.black);
+		//System.out.println("CANT PLACE WALL");
+		temp.removePlayer();
+		
 		// TODO Auto-generated method stub
 		//Should handle booting the player n
 	}
