@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.*;
-import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
@@ -26,6 +25,7 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
 	public JButton[][] horWalls = new JButton[boardlth][boardlth-1]; //Stores the horizontal wall buttons
 
 	private JPanel buttonCanvas; // Canvas that holds all the buttons of the game
+	private JPanel infoPanel; // Sub-panel for the info hub
 	
 	private Board board;
 	private Stack<String> moveStack = new Stack<String>();
@@ -70,20 +70,27 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
 	private void initialize() {
 		setName(BOARD_TITLE);
 		setTitle("Player " + (playerID+1));
-		setSize(800, 500);
+		setSize(550, 400);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
 
 		buttonCanvas = new JPanel();
+		infoPanel = new JPanel();
 		buttonCanvas.setLayout(null);
+		infoPanel.setLayout(new BorderLayout());
 		
 		initializeButtons();
 		buttonCanvas.setSize(356, 356);
-
-		add(buttonCanvas);
+		infoPanel.setPreferredSize(new Dimension(150, 356));
+		
 		hub = new PlayerInfoHub(board);
-	    this.add(hub);
-	    hub.setBounds(700,10,500,500);
+		infoPanel.add(hub);
+		
+		add(buttonCanvas);
+		add (infoPanel, BorderLayout.EAST);
+		
+//	    this.add(hub);
+//	    hub.setBounds(700,10,500,500);
 		setVisible(true);
 	}
 	
