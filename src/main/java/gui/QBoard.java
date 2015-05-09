@@ -42,6 +42,7 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
 	 */
     public QBoard(int num) {
         super();
+        playerID = -1;//Just watching the game
         board = new Board(num);
         initialize();
         for(Player p:board.getPlayers()){
@@ -204,9 +205,8 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
 	}
 	//These fields are currently here as our network isn't hooked up so something needs to keep track of the game
 
-	private int kickedPlayers=0;
+	
 	//Currently takes the load off the actionlistener, it handles making moves so all our code isnt in that method
-
     public void makeMove(String a,String b, int current){
 		if(a.equals(b)){
 			//movement of character
@@ -221,7 +221,7 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
 				board.getPlayers().get(current).removePlayer();
 				//make it so we can remove player to be added
 				//setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
-				kickedPlayers++;
+				
 			}
 
 		}
@@ -259,11 +259,7 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
 			
 			current %=size;
 		}
-		if(board.isWinner(kickedPlayers)!=null){
-			System.out.println("We have a winner!!");
-			this.dispose();
-			System.exit(0);
-		}
+		
 		
 		this.setTitle(("Player " + current + "'s turn"));
 		

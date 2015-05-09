@@ -5,7 +5,7 @@ Display Client
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
+import gui.QBoard;
 import board.Board;
 
 //  Create display client
@@ -34,6 +34,7 @@ public class DisplayClient{
     private boolean victor = false;
     private Board board;
     private int round;
+    private QBoard gui;
 
     public DisplayClient(String[] players) throws Exception{
 	
@@ -50,6 +51,7 @@ public class DisplayClient{
 	    }
         printData();
         board = new Board(numOfPlayers);
+        gui = new QBoard(numOfPlayers);
 	    //  Send Player message to all players
         sendPlayerMessage();
         System.out.println();
@@ -164,12 +166,14 @@ public class DisplayClient{
                 //  Check if legal and boot player if not
                 System.out.println("...Checking legality...");
                 if (!checkIfLegal(i, move)) {
+                	gui.bootPlayer(i);
+                	board.getPlayers().get(i).removePlayer();
         			sendBootMessage(i);
         			playerIDs[i] = null;
         		}else{
                     System.out.println("...Making move...");
                     // Send move to board
-        			//board.makeMove(move, i);
+        			gui.makeMove(move, i);
                     System.out.println("...Sending WENT message...");
                     // Send Went message to all players
         			sendWentMessage(i, move);
@@ -207,7 +211,7 @@ public class DisplayClient{
 
     //  Checks if victor
     public boolean checkIfVictor(){
-        return false;
+        return board.getWinnerNum() !=-1;
     }
 
     //  Sends VICTOR message to all move servers

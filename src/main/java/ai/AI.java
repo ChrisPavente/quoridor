@@ -149,7 +149,8 @@ public class AI implements GameEngine {
 	@Override
 	public String getMove() {
 		isTurn = false;
-		return getMove(board);
+		String s = getMove(board);
+		return s;
 	}
 
 	@Override
@@ -159,13 +160,8 @@ public class AI implements GameEngine {
 	}
 
 	@Override
-	public void bootPlayer(int n) {
-		for(Player pl: board.getPlayers()){
-			if(pl.getNum() == n)
-				pl.removePlayer();
-		}
-			
-		
+	public void bootPlayer(int n) {	
+		board.getPlayers().get(n).removePlayer();
 	}
     
     
