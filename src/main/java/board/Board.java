@@ -182,11 +182,11 @@ public class Board {
             throw new IllegalArgumentException("That Player is not in the game");
         }
         boolean isLegal = true;
-        if (s.contains("_")) {
-        	  int c1 = converColToInt(s.substring(0, s.indexOf("-")));
+        if (s.contains(",")) {
+        	  int c1 = converColToInt(s.substring(1, s.indexOf("-")));
               int r1 = convertRowToInt(s.charAt(s.indexOf("-")+1));
-              int c2 = converColToInt(s.substring(s.indexOf("_")+1,s.lastIndexOf("-")));
-              int r2 = convertRowToInt(s.charAt(s.length()-1));
+              int c2 = converColToInt(s.substring(s.indexOf(",")+1,s.lastIndexOf("-")));
+              int r2 = convertRowToInt(s.charAt(s.length()-2));
               isLegal = players.get(cur).getWallNum()>=1 && placeWall(r1,c1,r2,c2) && players.get(cur).useWall();
         	}
           

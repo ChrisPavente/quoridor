@@ -60,7 +60,7 @@ class moveServer extends Thread {
             //Receives the players to signal the start of the game
             parser = new Scanner(in.readLine());
             playerList = genPList(parser);
-            gameEngine = new AI(playerList.length, findPlayerId(serverName, playerList));
+            gameEngine = new QBoard(playerList.length, findPlayerId(serverName, playerList));
 
 
             //Game loop
@@ -81,6 +81,7 @@ class moveServer extends Thread {
                     gameEngine.setTurn();
                     //gameEngine.setCurrentMoveToNull(); done in QBoard now so we can use an interface
                     String move = null;
+                    Thread.sleep(200);
                     while (gameEngine.getMove() == null){
                     	Thread.sleep(200);
                     }

@@ -19,7 +19,7 @@ public class PlayerInfoHub extends JPanel {
 	
 	
 	public PlayerInfoHub(Board b){
-		gameBoard =b;
+		gameBoard = new Board(b.getPlayers().size());
 		runOnce();
 	}
 	
@@ -66,7 +66,8 @@ public class PlayerInfoHub extends JPanel {
 	//Passes in the number of the player who's panel is being updated
 	private void labelUpdater(int p){
 		JLabel l = playerWallInfo[p];
-		String text = "Player " + p + "\n Walls: " + gameBoard.getPlayers().get(p).getWallNum();
+		gameBoard.getPlayers().get(p).useWall();
+		String text = "Player " + (p+1) + "\n Walls: " + (gameBoard.getPlayers().get(p).getWallNum()+1);
 		l.setText(text);
 	}
 	

@@ -213,72 +213,14 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
 	//These fields are currently here as our network isn't hooked up so something needs to keep track of the game
 
 	
-	//Currently takes the load off the actionlistener, it handles making moves so all our code isnt in that method
-    public void makeMove(String a,String b, int current){
-		if(a.equals(b)){
-			//movement of character
-			System.out.println(a);
-			Player temp =board.getPlayers().get(current);
-			setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),Color.black);
-			if(board.makeMove(a,current)){
-				
-				setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
-			}
-			else{
-				board.getPlayers().get(current).removePlayer();
-				//make it so we can remove player to be added
-				//setColorOfSpace(temp.getSquare().getRow(),temp.getSquare().getColumn(),temp.getColor());
-				
-			}
-
-		}
-		else{
-			//must be trying to place a wall
-			Square temp = board.getPlayers().get(current).getSquare();
-			if(board.makeMove(a+"_"+b,current)){
-			int i = board.convertRowToInt(a.charAt(0));
-			int j = board.converColToInt(a.substring(2));
-			int k = board.convertRowToInt(b.charAt(0));
-			int l = board.converColToInt(b.substring(2));
-			System.out.println(a+"_"+b);
-			if(i !=k){
-			//	System.out.println("A Wall was placed");
-				vertWalls[j][i].setVisible(true);
-				vertWalls[l][k].setVisible(true);
-				
-			}
-			else if(j !=l){
-				//System.out.println("A Wall was placed");
-				horWalls[j][i].setVisible(true);
-				horWalls[l][k].setVisible(true);
-				
-			}
-			}
-			else{
-			
-				
-			}
-		}
-		ArrayList<Player>playa = (ArrayList<Player>) board.getPlayers();
-		int size = playa.size();
-		current = current%size;
-		while(!playa.get(current).isActive()){
-			
-			current %=size;
-		}
-		
-		
-		this.setTitle(("Player " + current + "'s turn"));
-		
-		
-	}
+	
 	public void makeMove(String move, int current){
 
 		String a;
 		String b;
-		if(move.contains("_")){
-			a = move.substring(0, move.indexOf("_"));
-			b = move.substring(move.indexOf("_")+1);	
+		if(move.contains(",")){
+			a = move.substring(1, move.indexOf(","));
+			b = move.substring(move.indexOf(",")+1,move.length()-1);	
 		}
 		else{
 			a = move;
@@ -304,44 +246,30 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
 		else{
 			
 			//must be trying to place a wall
-			Square temp = board.getPlayers().get(current).getSquare();
-			String s = a+"_"+b;
-			if(board.makeMove(s,current)){
+			//Square temp = board.getPlayers().get(current).getSquare();
+			String s = "("+a+","+b+")";
+			//if(board.makeMove(s,current)){
 			
-			int i =board.convertRowToInt(s.charAt(s.indexOf("-")+1));
-            int j = board.converColToInt(s.substring(0, s.indexOf("-")));
-            int k =board.convertRowToInt(s.charAt(s.length()-1));
-            int l =   board.converColToInt(s.substring(s.indexOf("_")+1,s.lastIndexOf("-")));
+			 int c1 = board.converColToInt(s.substring(1, s.indexOf("-")));
+             int r1 = board.convertRowToInt(s.charAt(s.indexOf("-")+1));
+             int c2 = board.converColToInt(s.substring(s.indexOf(",")+1,s.lastIndexOf("-")));
+             int r2 = board.convertRowToInt(s.charAt(s.length()-2));
             hub.updateHub(true);
-			if(i !=k){
-				System.out.println("A Wall was placed");
-                System.out.println();
-                vertWalls[j][i].setVisible(true);
-				vertWalls[l][k].setVisible(true);
-				
-			}
-			else if(j !=l){
-				System.out.println("A Wall was placed");
-                System.out.println();
-                horWalls[j][i].setVisible(true);
-				horWalls[l][k].setVisible(true);
-				
-			}
+		
+			if(c1==c2){
+             vertWalls[c1][r1].setVisible(true);
+		     vertWalls[c2][r2].setVisible(true);
 			}
 			else{
-				setColorOfSpace(temp.getRow(),temp.getColumn(),Color.black);
-				System.out.println("CANT PLACE WALL");
-                System.out.println();
-                board.getPlayers().get(current).removePlayer();
-				
+				horWalls[c1][r1].setVisible(true);
+			    horWalls[c2][r2].setVisible(true);
 			}
-            this.setTitle(("Player " + current + "'s turn"));
+			
+			}
+			current = board.findNextLegalPlayer(current);
+            this.setTitle(("Player " + (current+1) + "'s turn"));
 		}
 
-
-		
-		
-	}
 	public int changeCurrentPlayer(int current){
         switch(current){
             case 0:
@@ -372,11 +300,11 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
                     currentMove = move;
              
                 } else {
-                    currentMove = firstMove + '_' + move;
+                    currentMove = "("+firstMove + ',' + move+ ")";
                 }
             }
         }
-        System.out.println(currentMove);
+       // System.out.println(currentMove);
 		//System.out.println(board.makeMove(move, board.getCurrent()));
 		
 		//For testing purposes
