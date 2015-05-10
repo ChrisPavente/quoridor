@@ -49,15 +49,17 @@ public class Board {
 		int w = WALLS/numberOfPlayers;
 		
 		players = new ArrayList<Player>();
-		players.add(new Player(grid[0][4],w,0,getWinningSquares(0)));
-		players.add(new Player(grid[8][4], w,1,getWinningSquares(1)));
+		players.add(new Player(grid[0][4],w,0,getWinningSquares(0), getVisitedSquares(0)));
+		players.add(new Player(grid[8][4], w,1,getWinningSquares(1), getVisitedSquares(1)));
 		if (numberOfPlayers == 4) {
-			players.add(new Player(grid[4][8], w,2,getWinningSquares(2)));
-			players.add(new Player(grid[4][0],w,3,getWinningSquares(3)));
+			players.add(new Player(grid[4][8], w,2,getWinningSquares(2), getVisitedSquares(2)));
+			players.add(new Player(grid[4][0],w,3,getWinningSquares(3), getVisitedSquares(3)));
 		}
 	}
 
 	
+
+
 	/**
 	 * This method is used to build the actual grid for the board to be played
 	 * on. Note: this method must be private otherwise it could be called 
@@ -482,6 +484,22 @@ public class Board {
 		}
 		return sqrs;
 	}
+	private List<Square> getVisitedSquares(int num) {
+		List<Square> vis = new ArrayList<Square>();
+		if(num ==0){
+			vis.add(grid[0][4]);			
+		}
+		if(num ==1){
+			vis.add(grid[8][4]);
+		}
+		if(num ==2){
+			vis.add(grid[4][0]);			
+		}
+		if(num ==3){
+			vis.add(grid[4][8]);			
+		}
+		return vis;
+	}
 	
     /**
      * Get a list of valid move squares from a position
@@ -489,7 +507,6 @@ public class Board {
      * @param current: origin square
      * @return reachable empty squares
      */
-	//Need to check for wall placement as well!!!!!
     public List<Square> nextPossibleValidMove(Square current) {
         LinkedList<Square> adjacent = new LinkedList<Square>();
         LinkedList<Square> moves = new LinkedList<Square>();

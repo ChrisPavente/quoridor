@@ -21,15 +21,14 @@ public class ShortestPath {
 	private Board board;
 
 	/**
-	 * Constructs a shortest path from a given player on the board, square, set of walls,
-	 * and list of player.
+	 * Constructs a shortest path from a given player on the board's square.
 	 * 
 	 * @param bd: the current state of the board
 	 * @param curPlay: the player we are generating the path for
 	 * @param sqr:  the destination of this path, if using player's win condition this is null 
 	 * @param players: the players currently in the game
 	 */
-	public ShortestPath(Board bd, Player curPlay, Square sqr, ArrayList<Player> players) {
+	public ShortestPath(Board bd, Player curPlay, Square sqr, List<Player> players) {
 		path = null;
 		player = curPlay;
 		byPos = sqr != null; //if desired location is given this is true
@@ -61,16 +60,16 @@ public class ShortestPath {
 		nodes.add(current);
 		do {
 			current = nodes.remove();
-			current.addChild(new Square(current.getData().row + 1, current.getData().col));
-	        current.addChild(new Square(current.getData().row, current.getData().col + 1));
-	        current.addChild(new Square(current.getData().row - 1, current.getData().col));
-	        current.addChild(new Square(current.getData().row, current.getData().col - 1));
+			current.addChild(new Square(current.getData().getColumn() + 1, current.getData().getRow()));
+	        current.addChild(new Square(current.getData().getColumn(), current.getData().getRow() + 1));
+	        current.addChild(new Square(current.getData().getColumn() - 1, current.getData().getRow()));
+	        current.addChild(new Square(current.getData().getColumn(), current.getData().getRow() - 1));
 	        Iterator<Node<Square>> itr = current.getChildren().iterator();
 	        //check for valid node
 	        while(itr.hasNext()) {
 	            Node<Square> pos = itr.next();
-	            if(pos.getData().row < 0 || pos.getData().col < 0
-	                    || pos.getData().row > 8 || pos.getData().col > 8)
+	            if(pos.getData().getColumn() < 0 || pos.getData().getRow() < 0
+	                    || pos.getData().getColumn() > 8 || pos.getData().getRow() > 8)
 	                itr.remove();
 	        }
 	        nodes.addAll(current.getChildren());

@@ -1,8 +1,10 @@
 package board;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
+import ai.ShortestPath;
 import board.Square;
 
 /**
@@ -17,6 +19,8 @@ public class Player{
 	private Square square;
 	private int walls;
 	private Square[] winningSquares;
+	private ShortestPath path;
+	private List<Square> visitedSquares; 
 	
 	private boolean inGame;
 	private final static Color[] color = {Color.yellow, Color.green, Color.blue, Color.red};
@@ -31,9 +35,10 @@ public class Player{
 	 * @param walls: the number of walls the player has remaining
 	 * @param num: the players reference number
 	 */
-	public Player(Square s,int walls,int num,Square[] winningSquares) {
+	public Player(Square s,int walls,int num,Square[] winningSquares, List<Square> visitSquare) {
 		this.num =num;
 		this.square = s;
+		visitedSquares = visitSquare;
 		this.walls=walls;
 		this.winningSquares = winningSquares;
 		inGame = true;
@@ -147,6 +152,24 @@ public class Player{
 	public Square[] getWinningSquares(){
 		return winningSquares;
 	}
+	
+	public List<Square> getVisitedSquares(){
+		return visitedSquares;
+	}
+	
+    /**
+     * Generates the shortest path to this pawns endzone.
+     * 
+     * @param bd: current board state
+     * @param players: The other players that exist in the game
+     * @return The shortest path to this players winning condition.
+     */
+    public ArrayList<Square> genShortPath(Board bd, List<Player> players) {
+        path = new ShortestPath(bd, this, (Square) null, players);
+        if(path != null)
+            return path.getPath();
+        return null;
+    }
 	
 	
 } 
