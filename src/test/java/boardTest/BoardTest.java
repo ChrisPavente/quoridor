@@ -26,9 +26,9 @@ public class BoardTest {
 		assert(board.getPlayers().get(0).isActive());
 		assert(board.makeMove("V-H", 1));
 		assert(board.getPlayers().get(1).isActive());
-		assert(board.makeMove("III-F_III-G", 2));
+		assert(board.makeMove("(III-F,III-G)", 2));
 		assert(board.getPlayers().get(2).isActive());
-		assert(board.makeMove("VII-F_VII-G", 3));
+		assert(board.makeMove("(VII-F,VII-G)", 3));
 		assert(board.getPlayers().get(3).isActive());
 			
 	}
@@ -43,7 +43,7 @@ public class BoardTest {
 		assertTrue(board.makeMove("V-G",1));
 		assertTrue(board.makeMove("V-D",0));
 		assertTrue(board.makeMove("V-F",1));
-		assertTrue(board.makeMove("V-C_VI-C",0));
+		assertTrue(board.makeMove("(V-C,VI-C)",0));
 		assertTrue(board.makeMove("V-E",1));
 		assertTrue(board.makeMove("V-F",0));
 		assertTrue(board.makeMove("V-D",1));
@@ -58,12 +58,12 @@ public class BoardTest {
 	@Test
 	public void testMakeMove2() {
 		Board board = new Board(2);
-		assertTrue(board.makeMove("VI-A_VI-B", 0));
-		assertTrue(board.makeMove("VI-C_VI-D",1));
-		assertTrue(board.makeMove("VI-E_VI-F",0));
-		assertTrue(board.makeMove("VI-G_VI-H",1));
-		assertFalse(board.makeMove("VI-H_VI-I", 0));
-		assertFalse(board.makeMove("VI-H_VI-I", 1));
+		assertTrue(board.makeMove("(VI-A,VI-B)", 0));
+		assertTrue(board.makeMove("(VI-C,VI-D)",1));
+		assertTrue(board.makeMove("(VI-E,VI-F)",0));
+		assertTrue(board.makeMove("(VI-G,VI-H)",1));
+		assertFalse(board.makeMove("(VI-H,VI-I)", 0));
+		assertFalse(board.makeMove("(VI-H,VI-I)", 1));
 		//1 VI-A_VI-B  0 true
 		//2 VI-C_VI-D  1 true
 		//3 VI-E_VI-F  0 true
@@ -87,7 +87,7 @@ public class BoardTest {
 	@Test
 	public void testPlaceWall(){
 		Board board = new Board(2);
-		assert(board.makeMove("III-F_III-G", 0));
+		assert(board.makeMove("(III-F,III-G)", 0));
 		assertEquals("Player 0 should have one less wall",board.getPlayers().get(0).getWallNum(),9);
 		
 	}
