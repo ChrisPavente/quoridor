@@ -180,6 +180,10 @@ public class AI implements GameEngine {
 	public void bootPlayer(int n) {	
 		board.getPlayers().get(n).removePlayer();
 	}
+	
+	public void declareWinner(int n){
+		//Doesnt do anything for the AI
+	}
     
     
     

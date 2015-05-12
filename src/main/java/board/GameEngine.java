@@ -13,5 +13,5 @@ public interface GameEngine {
 	public String getMove();
 	public void makeMove(String s,int n);//Called to let to Engine know to make a move on its own board
 	public void bootPlayer(int n);//Will be used to boot player n from the current game
-	
+	public void declareWinner(int n);//LETS the client know the game is over
 }

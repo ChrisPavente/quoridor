@@ -181,7 +181,9 @@ public class DisplayClient{
                 System.out.println("...Checking for victor...");
                 //  Check for victor
         		if (checkIfVictor()) {
+        			victor =true;
         			sendVictorMessage(i);
+        			gui.declareWinner(i);
         		}
         	}
         }

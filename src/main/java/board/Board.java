@@ -402,21 +402,7 @@ public class Board {
 		System.out.println(board.toString());
 	}
 
-	/**
-	 * Method to determine the winner of the game
-	 * @param kickedPlayers
-	 * @return the winner of the game
-	 */
-	public Player isWinner(int kickedPlayers){
-		//Called after a move is made to see if that player won
-		for(Player p: players){
-		if(p.isActive() && 
-			(kickedPlayers == players.size()-1 || p.isAWinner())){
-			return p;
-		}
-		}
-		return null;
-	}
+	
 	
 	/**
 	 * 
@@ -424,13 +410,21 @@ public class Board {
 	 */
 	public int getWinnerNum(){
 		int next = this.findNextLegalPlayer(0);
-		if(next ==-1){
+		if(next == -1){
 			return 0;
 		}
-		next = this.findNextLegalPlayer(next);
-		if(next ==-1){//There are no more legal players after the first one we find!
-			return findNextLegalPlayer(0); 
+		else{
+			next = this.findNextLegalPlayer(next);
+			if(next ==-1){
+				return next;
+			}
 		}
+		for(Player p: players){
+			if(p.isAWinner()){
+				return p.getNum();
+			}
+		}
+		
 		return -1;
 	}
 	

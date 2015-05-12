@@ -354,5 +354,11 @@ public class QBoard extends JFrame implements ActionListener, GameEngine {
 		//Should handle booting the player n
 	}
 	
+	public void declareWinner(int n){
+		//Do something
+		System.out.println("Player "+n + " is the winner!!");
+		this.dispose();
+	}
+	
 	
 }

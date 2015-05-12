@@ -109,6 +109,11 @@ class moveServer extends Thread {
                 }
                 else if(message.equals("BOOT")) {
                     System.out.println("BOOT");
+                    String player = parser.next();
+                    if(player.equals(serverName)){
+                    	victor =true;//ends the game for the player once he is boot
+                    }
+                    gameEngine.bootPlayer(this.findPlayerId(player, playerList));
 					/* BOOT method here
 					 * INPUT BOOT <player-id>
 					 * removes the booted players pawns from the game board
@@ -118,7 +123,9 @@ class moveServer extends Thread {
                 }
                 else if(message.equals("VICTOR")) {
                     System.out.println("VICTOR");
+                    String player = parser.next();
                     victor = true;
+                    gameEngine.declareWinner(this.findPlayerId(player, playerList));
 					/*VICTOR method
 					 * input: VICTOR <player-id>
 					 * the game is over and <player> has won
